@@ -1,0 +1,66 @@
+services:
+  # Build-only service — produces the fat JAR
+  # Jobs are submitted via the existing Spark cluster (spark-master/workers)
+  spark-analytics-build:
+    build: .
+    image: pqg6-spark-analytics:latest
+    container_name: spark-analytics-build
+    profiles: ["build"]
+
+  # Submit training job to existing Spark cluster
+  spark-train:
+    image: bitnami/spark:3.5.1
+    container_name: spark-train
+    command: >
+      spark-submit
+        --master spark://spark-master:7077
+        --deploy-mode client
+        --class TrainModel
+        --conf spark.hadoop.fs.defaultFS=hdfs://namenode:9000
+        /opt/spark/apps/pqg6-spark-analytics.jar
+    volumes:
+      - spark-analytics-jar:/opt/spark/apps
+    environment:
+      - HDFS_NAMENODE=${HDFS_NAMENODE:-hdfs://namenode:9000}
+      - KAFKA_BOOTSTRAP_SERVERS=${KAFKA_BOOTSTRAP_SERVERS:-kafka:9092}
+    networks:
+      - pqg6-net
+    depends_on:
+      - spark-analytics-build
+    profiles: ["ml", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+
+  # Submit streaming classification job
+  spark-classify:
+    image: bitnami/spark:3.5.1
+    container_name: spark-classify
+    command: >
+      spark-submit
+        --master spark://spark-master:7077
+        --deploy-mode client
+        --class ClassifyFlows
+        --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1
+        --conf spark.hadoop.fs.defaultFS=hdfs://namenode:9000
+        /opt/spark/apps/pqg6-spark-analytics.jar
+    volumes:
+      - spark-analytics-jar:/opt/spark/apps
+    environment:
+      - HDFS_NAMENODE=${HDFS_NAMENODE:-hdfs://namenode:9000}
+      - KAFKA_BOOTSTRAP_SERVERS=${KAFKA_BOOTSTRAP_SERVERS:-kafka:9092}
+    networks:
+      - pqg6-net
+    profiles: ["ml", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+
+volumes:
+  spark-analytics-jar:
+
+networks:
+  pqg6-net:
+    external: true

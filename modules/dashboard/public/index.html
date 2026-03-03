@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PQG6 — Post-Quantum 6G Network Monitor</title>
+    <meta
+      name="description"
+      content="Real-time monitoring dashboard for Post-Quantum 6G network security analytics"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="css/quantum-theme.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-left">
+        <div class="logo">
+          <span class="logo-icon">⟨ψ⟩</span>
+          <h1>
+            PQG6
+            <span class="header-subtitle">Post-Quantum 6G Network Monitor</span>
+          </h1>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="health-badges" id="health-badges">
+          <span class="badge badge-loading" id="badge-kafka">Kafka</span>
+          <span class="badge badge-loading" id="badge-flink">Flink</span>
+          <span class="badge badge-loading" id="badge-hdfs">HDFS</span>
+        </div>
+        <div class="connection-status" id="ws-status">
+          <span class="status-dot"></span> Connecting...
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Grid -->
+    <main class="dashboard-grid">
+      <!-- Panel 1: Live Flow Monitor -->
+      <section class="panel panel-flow" id="panel-flow">
+        <div class="panel-header">
+          <h2>📊 Live Flow Monitor</h2>
+          <div class="panel-controls">
+            <button class="btn btn-sm" id="btn-pause-flow">⏸ Pause</button>
+            <select id="flow-window" class="select-sm">
+              <option value="30">30s</option>
+              <option value="60" selected>1m</option>
+              <option value="300">5m</option>
+            </select>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="flow-chart"></canvas>
+        </div>
+        <div class="panel-footer" id="flow-footer">
+          <span>Flows: <strong id="flow-count">0</strong></span>
+          <span>Avg Bytes/s: <strong id="avg-bytes">—</strong></span>
+          <span>Avg Packets/s: <strong id="avg-packets">—</strong></span>
+        </div>
+      </section>
+
+      <!-- Panel 2: Attack Alert Feed -->
+      <section class="panel panel-alerts" id="panel-alerts">
+        <div class="panel-header">
+          <h2>🚨 Attack Alerts</h2>
+          <div class="panel-controls">
+            <select id="severity-filter" class="select-sm">
+              <option value="all">All</option>
+              <option value="CRITICAL">Critical</option>
+              <option value="HIGH">High</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="LOW">Low</option>
+            </select>
+            <span class="alert-counter" id="alert-counter">0</span>
+          </div>
+        </div>
+        <div class="alert-feed" id="alert-feed">
+          <div class="empty-state">Waiting for alerts...</div>
+        </div>
+      </section>
+
+      <!-- Panel 3: ML Analytics -->
+      <section class="panel panel-ml" id="panel-ml">
+        <div class="panel-header">
+          <h2>🧠 ML Analytics</h2>
+          <button class="btn btn-sm" id="btn-refresh-ml">↻ Refresh</button>
+        </div>
+        <div class="ml-grid">
+          <div class="ml-metrics" id="ml-metrics">
+            <div class="metric-card">
+              <span class="metric-label">Accuracy</span>
+              <span class="metric-value" id="ml-accuracy">—</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Precision</span>
+              <span class="metric-value" id="ml-precision">—</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Recall</span>
+              <span class="metric-value" id="ml-recall">—</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">F1 Score</span>
+              <span class="metric-value" id="ml-f1">—</span>
+            </div>
+          </div>
+          <div class="chart-container chart-sm">
+            <canvas id="importance-chart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 4: Control Panel -->
+      <section class="panel panel-control" id="panel-control">
+        <div class="panel-header">
+          <h2>⚙️ Control Panel</h2>
+        </div>
+        <div class="control-grid">
+          <div class="control-group">
+            <label>Sim Duration (s)</label>
+            <input
+              type="number"
+              id="sim-duration"
+              value="30"
+              min="5"
+              max="120"
+              class="input-sm"
+            />
+          </div>
+          <div class="control-group">
+            <label>Normal Flows</label>
+            <input
+              type="number"
+              id="sim-normal"
+              value="20"
+              min="1"
+              max="50"
+              class="input-sm"
+            />
+          </div>
+          <div class="control-group">
+            <label>Flood Flows</label>
+            <input
+              type="number"
+              id="sim-flood"
+              value="3"
+              min="0"
+              max="10"
+              class="input-sm"
+            />
+          </div>
+          <div class="control-group">
+            <label>Stealth Flows</label>
+            <input
+              type="number"
+              id="sim-stealth"
+              value="3"
+              min="0"
+              max="10"
+              class="input-sm"
+            />
+          </div>
+          <div class="control-group">
+            <label>Burst Flows</label>
+            <input
+              type="number"
+              id="sim-burst"
+              value="2"
+              min="0"
+              max="10"
+              class="input-sm"
+            />
+          </div>
+          <div class="control-group">
+            <label>PQC Crypto</label>
+            <label class="toggle">
+              <input type="checkbox" id="sim-pqc" checked />
+              <span class="toggle-slider"></span>
+              <span class="toggle-label" id="pqc-label">Kyber + Dilithium</span>
+            </label>
+          </div>
+          <button class="btn btn-primary btn-full" id="btn-simulate">
+            ▶ Start Simulation
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>

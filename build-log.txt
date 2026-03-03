@@ -1,0 +1,585 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 3.10kB 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 5.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ns3-builder  1/10] FROM docker.io/library/ubuntu:22.04@sha256:3ba65aa20f86a0fad9df2b2c259c613df006b2e6d0bfcc8a146afb8c525a9751
+#4 resolve docker.io/library/ubuntu:22.04@sha256:3ba65aa20f86a0fad9df2b2c259c613df006b2e6d0bfcc8a146afb8c525a9751 0.0s done
+#4 DONE 0.0s
+
+#5 [liboqs-builder 3/3] RUN git clone --depth 1 --branch 0.10.1 https://github.com/open-quantum-safe/liboqs.git /tmp/liboqs &&     cd /tmp/liboqs &&     mkdir build && cd build &&     cmake -GNinja     -DCMAKE_INSTALL_PREFIX=/usr/local     -DCMAKE_BUILD_TYPE=Release     -DBUILD_SHARED_LIBS=ON     -DOQS_BUILD_ONLY_LIB=ON     .. &&     ninja && ninja install && ldconfig
+#5 CACHED
+
+#6 [liboqs-builder 2/3] RUN apt-get update && apt-get install -y     build-essential cmake git ninja-build     libssl-dev     && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [stage-2 3/9] COPY --from=liboqs-builder /usr/local/lib/liboqs* /usr/local/lib/
+#7 CACHED
+
+#8 [stage-2 2/9] RUN apt-get update && apt-get install -y     python3 python3-pip     libssl3     && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [stage-2 4/9] RUN ldconfig
+#9 CACHED
+
+#10 [internal] load build context
+#10 transferring context: 20.16kB done
+#10 DONE 0.0s
+
+#11 [ns3-builder  2/10] RUN apt-get update && apt-get install -y     build-essential cmake git ninja-build     python3 python3-dev python3-pip     libssl-dev libsqlite3-dev     wget     && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [ns3-builder  5/10] RUN ldconfig
+#12 CACHED
+
+#13 [ns3-builder  3/10] COPY --from=liboqs-builder /usr/local/lib/ /usr/local/lib/
+#13 CACHED
+
+#14 [ns3-builder  4/10] COPY --from=liboqs-builder /usr/local/include/oqs/ /usr/local/include/oqs/
+#14 CACHED
+
+#15 [ns3-builder  6/10] RUN wget -q https://www.nsnam.org/releases/ns-allinone-3.41.tar.bz2 -O /tmp/ns3.tar.bz2 &&     cd /opt && tar xjf /tmp/ns3.tar.bz2 &&     rm /tmp/ns3.tar.bz2 &&     mv /opt/ns-allinone-3.41/ns-3.41 /opt/ns3
+#15 CACHED
+
+#16 [ns3-builder  7/10] WORKDIR /opt/ns3
+#16 CACHED
+
+#17 [ns3-builder  8/10] COPY scratch/ /opt/ns3/scratch/pqg6/
+#17 DONE 0.0s
+
+#18 [ns3-builder  9/10] RUN cmake -S . -B build     -DCMAKE_BUILD_TYPE=Release     -DNS3_ENABLED_MODULES="core;network;internet;point-to-point;applications;flow-monitor;traffic-control"
+#18 0.241 -- The CXX compiler identification is GNU 11.4.0
+#18 0.274 -- The C compiler identification is GNU 11.4.0
+#18 0.280 -- Detecting CXX compiler ABI info
+#18 0.332 -- Detecting CXX compiler ABI info - done
+#18 0.337 -- Check for working CXX compiler: /usr/bin/c++ - skipped
+#18 0.337 -- Detecting CXX compile features
+#18 0.337 -- Detecting CXX compile features - done
+#18 0.340 -- Detecting C compiler ABI info
+#18 0.383 -- Detecting C compiler ABI info - done
+#18 0.388 -- Check for working C compiler: /usr/bin/cc - skipped
+#18 0.388 -- Detecting C compile features
+#18 0.388 -- Detecting C compile features - done
+#18 0.391 -- Using default output directory /opt/ns3/build
+#18 0.400 -- Proceeding without cmake-format
+#18 0.401 -- Performing Test FILESYSTEM_LIBRARY_IS_LINKED
+#18 0.836 -- Performing Test FILESYSTEM_LIBRARY_IS_LINKED - Success
+#18 0.838 -- Found Git: /usr/bin/git (found version "2.34.1") 
+#18 0.840 -- find_external_library: SQLite3 was found.
+#18 0.956 -- Could NOT find Boost (missing: Boost_INCLUDE_DIR) 
+#18 0.958 -- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+#18 0.960 -- docs: doxygen documentation not enabled due to missing dependencies: doxygen;dot;dia
+#18 0.961 -- Failed to locate sphinx-build executable (missing: SPHINX_EXECUTABLE) 
+#18 0.961 -- docs: sphinx documentation not enabled due to missing dependencies: Sphinx;epstopdf;pdflatex;latexmk;convert;dvipng
+#18 0.962 -- Performing Test HAVE_UINT128_T
+#18 0.982 -- Performing Test HAVE_UINT128_T - Failed
+#18 0.982 -- Performing Test HAVE___UINT128_T
+#18 1.032 -- Performing Test HAVE___UINT128_T - Success
+#18 1.032 -- Looking for stdint.h
+#18 1.077 -- Looking for stdint.h - found
+#18 1.077 -- Looking for inttypes.h
+#18 1.121 -- Looking for inttypes.h - found
+#18 1.122 -- Looking for sys/types.h
+#18 1.165 -- Looking for sys/types.h - found
+#18 1.165 -- Looking for sys/stat.h
+#18 1.209 -- Looking for sys/stat.h - found
+#18 1.209 -- Looking for dirent.h
+#18 1.253 -- Looking for dirent.h - found
+#18 1.253 -- Looking for stdlib.h
+#18 1.301 -- Looking for stdlib.h - found
+#18 1.302 -- Looking for signal.h
+#18 1.347 -- Looking for signal.h - found
+#18 1.347 -- Looking for netpacket/packet.h
+#18 1.392 -- Looking for netpacket/packet.h - found
+#18 1.392 -- Looking for getenv
+#18 1.436 -- Looking for getenv - found
+#18 1.437 -- Precompiled headers were enabled
+#18 1.438 -- Processing src/applications
+#18 1.441 -- Processing src/core
+#18 1.442 -- Looking for include files boost/units/quantity.hpp, boost/units/systems/si.hpp
+#18 1.459 -- Looking for include files boost/units/quantity.hpp, boost/units/systems/si.hpp - not found
+#18 1.459 -- Boost Units are an optional feature of length.cc. Ubuntu ships it within the libboost-dev package. You may need to clean up the CMake cache after installing it to pass this check.
+#18 1.464 -- Processing src/flow-monitor
+#18 1.466 -- Processing src/internet
+#18 1.472 -- Processing src/network
+#18 1.477 -- Processing src/point-to-point
+#18 1.478 -- Processing src/traffic-control
+#18 1.480 -- Processing src/bridge
+#18 1.481 -- Processing src/stats
+#18 1.489 -- ---- Summary of ns-3 settings:
+#18 1.489 Build profile                 : release
+#18 1.489 Build directory               : /opt/ns3/build
+#18 1.489 Build with runtime asserts    : OFF (not requested)
+#18 1.489 Build with runtime logging    : OFF (not requested)
+#18 1.489 Build version embedding       : OFF (not requested)
+#18 1.489 BRITE Integration             : OFF (missing dependency)
+#18 1.489 DES Metrics event collection  : OFF (not requested)
+#18 1.489 DPDK NetDevice                : OFF (not requested)
+#18 1.489 Emulation FdNetDevice         : OFF (missing dependency)
+#18 1.489 Examples                      : OFF (not requested)
+#18 1.489 File descriptor NetDevice     : OFF (missing dependency)
+#18 1.489 GNU Scientific Library (GSL)  : OFF (GSL was not found)
+#18 1.489 GtkConfigStore                : OFF (Harfbuzz is required by GTK3 and was not found)
+#18 1.489 LibXml2 support               : OFF (LibXML2 was not found)
+#18 1.489 MPI Support                   : OFF (not requested)
+#18 1.489 ns-3 Click Integration        : OFF (missing dependency)
+#18 1.489 ns-3 OpenFlow Integration     : OFF (missing dependency)
+#18 1.489 Netmap emulation FdNetDevice  : OFF (missing dependency)
+#18 1.489 PyViz visualizer              : OFF (Python Bindings are disabled)
+#18 1.489 Python Bindings               : OFF (not requested)
+#18 1.489 SQLite support                : ON
+#18 1.489 Eigen3 support                : OFF (Eigen was not found)
+#18 1.489 Tap Bridge                    : ON
+#18 1.489 Tap FdNetDevice               : OFF (missing dependency)
+#18 1.489 Tests                         : OFF (not requested)
+#18 1.489 
+#18 1.489 
+#18 1.489 Modules configured to be built:
+#18 1.489 applications              bridge                    core                      
+#18 1.489 flow-monitor              internet                  network                   
+#18 1.489 point-to-point            stats                     traffic-control           
+#18 1.489 
+#18 1.489 
+#18 1.489 Modules that cannot be built:
+#18 1.489 mpi                       
+#18 1.489 
+#18 1.489 
+#18 1.493 -- Configuring done
+#18 1.572 -- Generating done
+#18 1.576 -- Build files have been written to: /opt/ns3/build
+#18 DONE 1.6s
+
+#19 [ns3-builder 10/10] RUN cmake --build build -j$(nproc)
+#19 0.270 [  0%] Building CXX object CMakeFiles/stdlib_pch.dir/cmake_pch.hxx.gch
+#19 0.270 [  0%] Building CXX object CMakeFiles/stdlib_pch_exec.dir/cmake_pch.hxx.gch
+#19 0.271 [  1%] Building CXX object scratch/nested-subdir/CMakeFiles/scratch-nested-subdir-lib.dir/lib/scratch-nested-subdir-library-source.cc.o
+#19 0.455 [  1%] Linking CXX static library ../../lib/libscratch-nested-subdir-lib.a
+#19 1.838 [  2%] Building CXX object CMakeFiles/stdlib_pch.dir/build-support/empty.cc.o
+#19 1.838 [  2%] Building CXX object CMakeFiles/stdlib_pch_exec.dir/build-support/empty-main.cc.o
+#19 1.908 [  3%] Linking CXX executable ns3.41-stdlib_pch_exec
+#19 1.920 [  3%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/unix-fd-reader.cc.o
+#19 1.920 [  4%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/int64x64-128.cc.o
+#19 1.921 [  4%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/helper/random-variable-stream-helper.cc.o
+#19 1.922 [  5%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/helper/event-garbage-collector.cc.o
+#19 1.923 [  5%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/time.cc.o
+#19 1.924 [  5%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/helper/csv-reader.cc.o
+#19 1.925 [  5%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/event-id.cc.o
+#19 1.926 [  5%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/map-scheduler.cc.o
+#19 1.926 [  5%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/heap-scheduler.cc.o
+#19 1.926 [  6%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/list-scheduler.cc.o
+#19 1.928 [  7%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/priority-queue-scheduler.cc.o
+#19 1.929 [  8%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/simulator-impl.cc.o
+#19 1.929 [  8%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/calendar-scheduler.cc.o
+#19 1.929 [  8%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/simulator.cc.o
+#19 1.930 [  8%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/scheduler.cc.o
+#19 1.931 [  8%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/event-impl.cc.o
+#19 1.941 [  8%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/timer.cc.o
+#19 1.942 [  8%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/default-simulator-impl.cc.o
+#19 1.950 [  8%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/watchdog.cc.o
+#19 2.028 [  9%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/synchronizer.cc.o
+#19 2.138 [  9%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/make-event.cc.o
+#19 2.220 [  9%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/environment-variable.cc.o
+#19 2.349 [  9%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/log.cc.o
+#19 2.378 [ 10%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/breakpoint.cc.o
+#19 2.386 [ 10%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/type-id.cc.o
+#19 2.402 [ 10%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/attribute-construction-list.cc.o
+#19 2.411 [ 10%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/object-base.cc.o
+#19 2.489 [ 11%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/object.cc.o
+#19 2.490 [ 11%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/test.cc.o
+#19 2.507 [ 11%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/random-variable-stream.cc.o
+#19 2.538 [ 12%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/rng-seed-manager.cc.o
+#19 2.590 [ 12%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/command-line.cc.o
+#19 2.591 [ 12%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/rng-stream.cc.o
+#19 2.606 [ 12%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/attribute.cc.o
+#19 2.649 [ 13%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/boolean.cc.o
+#19 2.701 [ 13%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/integer.cc.o
+#19 2.705 [ 13%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/uinteger.cc.o
+#19 2.763 [ 13%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/double.cc.o
+#19 2.827 [ 14%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/int64x64.cc.o
+#19 2.925 [ 14%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/string.cc.o
+#19 2.951 [ 14%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/pointer.cc.o
+#19 2.962 [ 14%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/object-ptr-container.cc.o
+#19 2.963 [ 15%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/object-factory.cc.o
+#19 3.004 [ 15%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/global-value.cc.o
+#19 3.056 [ 15%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/trace-source-accessor.cc.o
+#19 3.064 [ 16%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/config.cc.o
+#19 3.068 [ 16%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/callback.cc.o
+#19 3.162 [ 16%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/names.cc.o
+#19 3.239 [ 16%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/vector.cc.o
+#19 3.246 [ 17%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/fatal-impl.cc.o
+#19 3.356 [ 17%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/system-path.cc.o
+#19 3.433 [ 17%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/hash-function.cc.o
+#19 3.463 [ 17%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/hash-murmur3.cc.o
+#19 3.488 [ 18%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/hash-fnv.cc.o
+#19 3.595 [ 18%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/hash.cc.o
+#19 3.602 [ 18%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/des-metrics.cc.o
+#19 3.625 [ 18%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/ascii-file.cc.o
+#19 3.658 [ 19%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/node-printer.cc.o
+#19 3.752 [ 19%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/show-progress.cc.o
+#19 3.772 [ 19%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/time-printer.cc.o
+#19 3.789 [ 20%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/system-wall-clock-ms.cc.o
+#19 3.807 [ 20%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/system-wall-clock-timestamp.cc.o
+#19 3.857 [ 20%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/length.cc.o
+#19 3.866 [ 20%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/trickle-timer.cc.o
+#19 3.909 [ 21%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/realtime-simulator-impl.cc.o
+#19 4.038 [ 21%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/wall-clock-synchronizer.cc.o
+#19 4.060 [ 21%] Building CXX object src/core/CMakeFiles/libcore-obj.dir/model/matrix-array.cc.o
+#19 6.834 [ 21%] Linking CXX shared library ../../lib/libns3.41-core.so
+#19 6.946 [ 21%] Building CXX object utils/CMakeFiles/bench-scheduler.dir/bench-scheduler.cc.o
+#19 6.946 [ 21%] Building CXX object scratch/nested-subdir/CMakeFiles/scratch_nested-subdir_scratch-nested-subdir-executable.dir/scratch-nested-subdir-executable.cc.o
+#19 6.947 [ 21%] Building CXX object utils/CMakeFiles/perf-io.dir/perf/perf-io.cc.o
+#19 6.947 [ 21%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/helper/gnuplot-helper.cc.o
+#19 6.947 [ 21%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/sqlite-data-output.cc.o
+#19 6.947 [ 21%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/boolean-probe.cc.o
+#19 6.950 [ 21%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/helper/file-helper.cc.o
+#19 6.950 [ 21%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/data-calculator.cc.o
+#19 6.950 [ 21%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/data-collection-object.cc.o
+#19 6.950 [ 21%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/data-collector.cc.o
+#19 6.952 [ 23%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/basic-data-calculators.cc.o
+#19 6.952 [ 23%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/sqlite-output.cc.o
+#19 6.953 [ 23%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/get-wildcard-matches.cc.o
+#19 6.953 [ 24%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/data-output-interface.cc.o
+#19 6.953 [ 24%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/double-probe.cc.o
+#19 6.954 [ 24%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/file-aggregator.cc.o
+#19 6.956 [ 25%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/gnuplot-aggregator.cc.o
+#19 6.956 [ 25%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/gnuplot.cc.o
+#19 6.956 [ 25%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/histogram.cc.o
+#19 6.959 [ 26%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/omnet-data-output.cc.o
+#19 7.537 [ 26%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/probe.cc.o
+#19 7.539 [ 26%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/time-probe.cc.o
+#19 7.543 [ 26%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/time-data-calculators.cc.o
+#19 7.554 [ 27%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/time-series-adaptor.cc.o
+#19 7.617 [ 27%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/uinteger-16-probe.cc.o
+#19 7.695 [ 27%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/uinteger-32-probe.cc.o
+#19 7.730 [ 27%] Building CXX object src/stats/CMakeFiles/libstats-obj.dir/model/uinteger-8-probe.cc.o
+#19 8.304 [ 27%] Linking CXX executable ns3.41-scratch-nested-subdir-executable
+#19 8.617 [ 28%] Linking CXX executable perf/ns3.41-perf-io
+#19 9.263 [ 29%] Linking CXX executable ns3.41-bench-scheduler
+#19 9.921 [ 29%] Linking CXX shared library ../../lib/libns3.41-stats.so
+#19 10.00 [ 29%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/helper/application-container.cc.o
+#19 10.00 [ 29%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/helper/delay-jitter-estimation.cc.o
+#19 10.00 [ 30%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/helper/net-device-container.cc.o
+#19 10.00 [ 30%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/helper/node-container.cc.o
+#19 10.01 [ 30%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/address.cc.o
+#19 10.01 [ 31%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/helper/simple-net-device-helper.cc.o
+#19 10.01 [ 31%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/helper/packet-socket-helper.cc.o
+#19 10.01 [ 31%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/byte-tag-list.cc.o
+#19 10.01 [ 32%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/channel.cc.o
+#19 10.01 [ 32%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/helper/trace-helper.cc.o
+#19 10.01 [ 32%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/application.cc.o
+#19 10.01 [ 32%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/header.cc.o
+#19 10.01 [ 32%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/net-device.cc.o
+#19 10.01 [ 32%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/nix-vector.cc.o
+#19 10.01 [ 32%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/buffer.cc.o
+#19 10.01 [ 33%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/chunk.cc.o
+#19 10.01 [ 33%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/channel-list.cc.o
+#19 10.01 [ 34%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/node-list.cc.o
+#19 10.01 [ 34%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/packet-metadata.cc.o
+#19 10.02 [ 34%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/node.cc.o
+#19 10.35 [ 34%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/packet-tag-list.cc.o
+#19 10.41 [ 35%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/packet.cc.o
+#19 10.43 [ 35%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/socket-factory.cc.o
+#19 10.45 [ 35%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/socket.cc.o
+#19 10.50 [ 35%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/tag-buffer.cc.o
+#19 10.60 [ 36%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/tag.cc.o
+#19 10.61 [ 36%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/model/trailer.cc.o
+#19 10.65 [ 36%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/address-utils.cc.o
+#19 10.68 [ 37%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/bit-deserializer.cc.o
+#19 10.70 [ 37%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/bit-serializer.cc.o
+#19 10.78 [ 37%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/crc32.cc.o
+#19 10.79 [ 37%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/data-rate.cc.o
+#19 10.80 [ 38%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/drop-tail-queue.cc.o
+#19 10.80 [ 38%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/dynamic-queue-limits.cc.o
+#19 10.85 [ 38%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/error-channel.cc.o
+#19 10.88 [ 38%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/error-model.cc.o
+#19 10.95 [ 39%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/ethernet-header.cc.o
+#19 10.95 [ 39%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/ethernet-trailer.cc.o
+#19 10.98 [ 39%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/flow-id-tag.cc.o
+#19 11.01 [ 39%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/inet-socket-address.cc.o
+#19 11.16 [ 40%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/inet6-socket-address.cc.o
+#19 11.18 [ 40%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/ipv4-address.cc.o
+#19 11.25 [ 40%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/ipv6-address.cc.o
+#19 11.26 [ 41%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/llc-snap-header.cc.o
+#19 11.29 [ 41%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/mac16-address.cc.o
+#19 11.29 [ 41%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/mac48-address.cc.o
+#19 11.34 [ 41%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/mac64-address.cc.o
+#19 11.42 [ 42%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/mac8-address.cc.o
+#19 11.44 [ 42%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/net-device-queue-interface.cc.o
+#19 11.45 [ 42%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/output-stream-wrapper.cc.o
+#19 11.57 [ 42%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/packet-burst.cc.o
+#19 11.70 [ 43%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/packet-data-calculators.cc.o
+#19 11.75 [ 43%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/packet-probe.cc.o
+#19 11.76 [ 43%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/packet-socket-address.cc.o
+#19 11.79 [ 43%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/packet-socket-client.cc.o
+#19 12.01 [ 43%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/packet-socket-server.cc.o
+#19 12.01 [ 44%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/packet-socket-factory.cc.o
+#19 12.16 [ 44%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/packet-socket.cc.o
+#19 12.17 [ 44%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/packetbb.cc.o
+#19 12.23 [ 45%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/pcap-file-wrapper.cc.o
+#19 12.27 [ 45%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/pcap-file.cc.o
+#19 12.32 [ 45%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/queue-item.cc.o
+#19 12.39 [ 46%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/queue-limits.cc.o
+#19 12.51 [ 46%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/queue-size.cc.o
+#19 12.53 [ 46%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/queue.cc.o
+#19 12.57 [ 46%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/radiotap-header.cc.o
+#19 12.58 [ 47%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/simple-channel.cc.o
+#19 12.64 [ 47%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/simple-net-device.cc.o
+#19 12.67 [ 47%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/sll-header.cc.o
+#19 12.70 [ 47%] Building CXX object src/network/CMakeFiles/libnetwork-obj.dir/utils/timestamp-tag.cc.o
+#19 14.79 [ 47%] Linking CXX shared library ../../lib/libns3.41-network.so
+#19 14.94 [ 47%] Building CXX object src/bridge/CMakeFiles/libbridge-obj.dir/helper/bridge-helper.cc.o
+#19 14.94 [ 48%] Building CXX object src/point-to-point/CMakeFiles/libpoint-to-point-obj.dir/model/ppp-header.cc.o
+#19 14.95 [ 48%] Building CXX object src/point-to-point/CMakeFiles/libpoint-to-point-obj.dir/model/point-to-point-channel.cc.o
+#19 14.95 [ 48%] Building CXX object src/point-to-point/CMakeFiles/libpoint-to-point-obj.dir/helper/point-to-point-helper.cc.o
+#19 14.95 [ 48%] Building CXX object src/bridge/CMakeFiles/libbridge-obj.dir/model/bridge-net-device.cc.o
+#19 14.95 [ 49%] Building CXX object src/point-to-point/CMakeFiles/libpoint-to-point-obj.dir/model/point-to-point-net-device.cc.o
+#19 14.95 [ 49%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/helper/queue-disc-container.cc.o
+#19 14.95 [ 49%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/fq-pie-queue-disc.cc.o
+#19 14.95 [ 50%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/fifo-queue-disc.cc.o
+#19 14.95 [ 49%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/fq-codel-queue-disc.cc.o
+#19 14.95 [ 50%] Building CXX object src/bridge/CMakeFiles/libbridge-obj.dir/model/bridge-channel.cc.o
+#19 14.95 [ 50%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/helper/traffic-control-helper.cc.o
+#19 14.95 [ 50%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/cobalt-queue-disc.cc.o
+#19 14.95 [ 51%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/codel-queue-disc.cc.o
+#19 14.95 [ 51%] Building CXX object utils/CMakeFiles/bench-packets.dir/bench-packets.cc.o
+#19 14.95 [ 51%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/mq-queue-disc.cc.o
+#19 14.95 [ 51%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/fq-cobalt-queue-disc.cc.o
+#19 14.95 [ 51%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/packet-filter.cc.o
+#19 14.95 [ 52%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/pfifo-fast-queue-disc.cc.o
+#19 14.96 [ 52%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/pie-queue-disc.cc.o
+#19 15.43 [ 52%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/prio-queue-disc.cc.o
+#19 15.51 [ 52%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/queue-disc.cc.o
+#19 15.53 [ 53%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/red-queue-disc.cc.o
+#19 15.68 [ 53%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/tbf-queue-disc.cc.o
+#19 15.70 [ 53%] Building CXX object src/traffic-control/CMakeFiles/libtraffic-control-obj.dir/model/traffic-control-layer.cc.o
+#19 16.42 [ 53%] Linking CXX executable ns3.41-bench-packets
+#19 17.05 [ 53%] Linking CXX shared library ../../lib/libns3.41-bridge.so
+#19 18.18 [ 54%] Linking CXX shared library ../../lib/libns3.41-point-to-point.so
+#19 19.63 [ 55%] Linking CXX shared library ../../lib/libns3.41-traffic-control.so
+#19 19.73 [ 55%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/internet-stack-helper.cc.o
+#19 19.73 [ 55%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/internet-trace-helper.cc.o
+#19 19.73 [ 56%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/ipv4-address-helper.cc.o
+#19 19.73 [ 56%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/ipv4-global-routing-helper.cc.o
+#19 19.73 [ 56%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/ipv4-list-routing-helper.cc.o
+#19 19.73 [ 57%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/ipv4-routing-helper.cc.o
+#19 19.74 [ 57%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/ipv6-address-helper.cc.o
+#19 19.74 [ 57%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/ipv4-interface-container.cc.o
+#19 19.74 [ 57%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/ipv6-interface-container.cc.o
+#19 19.74 [ 57%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/ipv4-static-routing-helper.cc.o
+#19 19.74 [ 57%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/ipv6-static-routing-helper.cc.o
+#19 19.74 [ 58%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/ipv6-list-routing-helper.cc.o
+#19 19.74 [ 58%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/ripng-helper.cc.o
+#19 19.74 [ 58%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/neighbor-cache-helper.cc.o
+#19 19.74 [ 58%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/ipv6-routing-helper.cc.o
+#19 19.74 [ 59%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/helper/rip-helper.cc.o
+#19 19.74 [ 60%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/arp-header.cc.o
+#19 19.74 [ 60%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/arp-l3-protocol.cc.o
+#19 19.74 [ 60%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/arp-cache.cc.o
+#19 19.75 [ 60%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/arp-queue-disc-item.cc.o
+#19 20.21 [ 60%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/candidate-queue.cc.o
+#19 20.25 [ 61%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/global-route-manager-impl.cc.o
+#19 20.26 [ 61%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/global-route-manager.cc.o
+#19 20.31 [ 61%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/global-router-interface.cc.o
+#19 20.33 [ 61%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/icmpv4-l4-protocol.cc.o
+#19 20.46 [ 62%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/icmpv4.cc.o
+#19 20.54 [ 62%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/icmpv6-header.cc.o
+#19 20.55 [ 62%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/icmpv6-l4-protocol.cc.o
+#19 20.62 [ 62%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ip-l4-protocol.cc.o
+#19 20.65 [ 63%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-address-generator.cc.o
+#19 20.76 [ 63%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-end-point-demux.cc.o
+#19 20.78 [ 63%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-end-point.cc.o
+#19 20.84 [ 64%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-global-routing.cc.o
+#19 20.98 [ 64%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-header.cc.o
+#19 21.07 [ 64%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-interface-address.cc.o
+#19 21.31 [ 64%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-interface.cc.o
+#19 21.35 [ 65%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-l3-protocol.cc.o
+#19 21.41 [ 65%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-list-routing.cc.o
+#19 21.50 [ 65%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-packet-filter.cc.o
+#19 21.51 [ 65%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-packet-info-tag.cc.o
+#19 21.53 [ 66%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-packet-probe.cc.o
+#19 21.58 [ 66%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-queue-disc-item.cc.o
+#19 21.59 [ 66%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-raw-socket-factory-impl.cc.o
+#19 21.73 [ 66%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-raw-socket-factory.cc.o
+#19 21.82 [ 67%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-raw-socket-impl.cc.o
+#19 21.99 [ 67%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-route.cc.o
+#19 22.01 [ 67%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-routing-protocol.cc.o
+#19 22.11 [ 68%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-routing-table-entry.cc.o
+#19 22.14 [ 68%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4-static-routing.cc.o
+#19 22.36 [ 68%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv4.cc.o
+#19 22.36 [ 68%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-address-generator.cc.o
+#19 22.51 [ 69%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-autoconfigured-prefix.cc.o
+#19 22.54 [ 69%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-end-point-demux.cc.o
+#19 22.62 [ 69%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-end-point.cc.o
+#19 22.63 [ 69%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-extension-demux.cc.o
+#19 22.64 [ 70%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-extension-header.cc.o
+#19 22.73 [ 70%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-extension.cc.o
+#19 22.83 [ 70%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-header.cc.o
+#19 22.85 [ 70%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-interface-address.cc.o
+#19 22.89 [ 71%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-interface.cc.o
+#19 22.99 [ 71%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-l3-protocol.cc.o
+#19 23.20 [ 71%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-list-routing.cc.o
+#19 23.20 [ 72%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-option-demux.cc.o
+#19 23.22 [ 72%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-option-header.cc.o
+#19 23.24 [ 72%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-option.cc.o
+#19 23.25 [ 72%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-packet-filter.cc.o
+#19 23.26 [ 73%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-packet-info-tag.cc.o
+#19 23.36 [ 73%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-packet-probe.cc.o
+#19 23.39 [ 73%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-pmtu-cache.cc.o
+#19 23.52 [ 73%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-queue-disc-item.cc.o
+#19 23.62 [ 74%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-raw-socket-factory-impl.cc.o
+#19 23.76 [ 74%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-raw-socket-factory.cc.o
+#19 23.89 [ 74%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-raw-socket-impl.cc.o
+#19 23.90 [ 74%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-route.cc.o
+#19 23.90 [ 75%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-routing-protocol.cc.o
+#19 24.01 [ 75%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-routing-table-entry.cc.o
+#19 24.02 [ 75%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6-static-routing.cc.o
+#19 24.15 [ 76%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ipv6.cc.o
+#19 24.26 [ 76%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/loopback-net-device.cc.o
+#19 24.29 [ 76%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ndisc-cache.cc.o
+#19 24.37 [ 76%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/rip-header.cc.o
+#19 24.39 [ 77%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/rip.cc.o
+#19 24.40 [ 77%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ripng-header.cc.o
+#19 24.47 [ 77%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/ripng.cc.o
+#19 24.49 [ 77%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/rtt-estimator.cc.o
+#19 24.53 [ 78%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-bic.cc.o
+#19 24.54 [ 78%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-bbr.cc.o
+#19 24.65 [ 78%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-congestion-ops.cc.o
+#19 24.79 [ 78%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-cubic.cc.o
+#19 24.86 [ 79%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-dctcp.cc.o
+#19 25.08 [ 79%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-header.cc.o
+#19 25.20 [ 79%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-highspeed.cc.o
+#19 25.21 [ 79%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-htcp.cc.o
+#19 25.32 [ 80%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-hybla.cc.o
+#19 25.43 [ 80%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-illinois.cc.o
+#19 25.72 [ 80%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-l4-protocol.cc.o
+#19 25.78 [ 81%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-ledbat.cc.o
+#19 25.78 [ 81%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-linux-reno.cc.o
+#19 25.85 [ 81%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-lp.cc.o
+#19 25.93 [ 81%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-option-rfc793.cc.o
+#19 25.93 [ 82%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-option-sack-permitted.cc.o
+#19 25.95 [ 82%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-option-sack.cc.o
+#19 26.05 [ 82%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-option-ts.cc.o
+#19 26.20 [ 82%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-option-winscale.cc.o
+#19 26.34 [ 83%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-option.cc.o
+#19 26.42 [ 83%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-prr-recovery.cc.o
+#19 26.56 [ 83%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-rate-ops.cc.o
+#19 26.60 [ 83%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-recovery-ops.cc.o
+#19 26.61 [ 84%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-rx-buffer.cc.o
+#19 26.61 [ 84%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-scalable.cc.o
+#19 26.63 [ 84%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-socket-base.cc.o
+#19 26.68 [ 85%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-socket-factory-impl.cc.o
+#19 26.70 [ 85%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-socket-factory.cc.o
+#19 26.83 [ 85%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-socket-state.cc.o
+#19 27.06 [ 85%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-socket.cc.o
+#19 27.07 [ 86%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-tx-buffer.cc.o
+#19 27.08 [ 86%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-tx-item.cc.o
+#19 27.11 [ 86%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-vegas.cc.o
+#19 27.21 [ 86%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-veno.cc.o
+#19 27.45 [ 87%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-westwood-plus.cc.o
+#19 27.47 [ 87%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/tcp-yeah.cc.o
+#19 27.54 [ 87%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/udp-header.cc.o
+#19 27.71 [ 87%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/udp-l4-protocol.cc.o
+#19 27.74 [ 88%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/udp-socket-factory-impl.cc.o
+#19 27.78 [ 88%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/udp-socket-factory.cc.o
+#19 27.98 [ 88%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/udp-socket-impl.cc.o
+#19 28.06 [ 89%] Building CXX object src/internet/CMakeFiles/libinternet-obj.dir/model/udp-socket.cc.o
+#19 36.38 [ 90%] Linking CXX shared library ../../lib/libns3.41-internet.so
+#19 36.61 [ 90%] Building CXX object src/flow-monitor/CMakeFiles/libflow-monitor-obj.dir/model/flow-classifier.cc.o
+#19 36.61 [ 91%] Building CXX object src/flow-monitor/CMakeFiles/libflow-monitor-obj.dir/helper/flow-monitor-helper.cc.o
+#19 36.61 [ 91%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/helper/bulk-send-helper.cc.o
+#19 36.61 [ 91%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/helper/on-off-helper.cc.o
+#19 36.61 [ 91%] Building CXX object src/flow-monitor/CMakeFiles/libflow-monitor-obj.dir/model/flow-probe.cc.o
+#19 36.61 [ 92%] Building CXX object src/flow-monitor/CMakeFiles/libflow-monitor-obj.dir/model/ipv4-flow-classifier.cc.o
+#19 36.61 [ 92%] Building CXX object src/flow-monitor/CMakeFiles/libflow-monitor-obj.dir/model/ipv4-flow-probe.cc.o
+#19 36.61 [ 92%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/helper/udp-client-server-helper.cc.o
+#19 36.61 [ 92%] Building CXX object src/flow-monitor/CMakeFiles/libflow-monitor-obj.dir/model/ipv6-flow-probe.cc.o
+#19 36.61 [ 92%] Building CXX object src/flow-monitor/CMakeFiles/libflow-monitor-obj.dir/model/ipv6-flow-classifier.cc.o
+#19 36.61 [ 92%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/bulk-send-application.cc.o
+#19 36.62 [ 93%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/helper/packet-sink-helper.cc.o
+#19 36.62 [ 93%] Building CXX object src/flow-monitor/CMakeFiles/libflow-monitor-obj.dir/model/flow-monitor.cc.o
+#19 36.62 [ 93%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/packet-loss-counter.cc.o
+#19 36.62 [ 93%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/helper/three-gpp-http-helper.cc.o
+#19 36.62 [ 93%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/helper/udp-echo-helper.cc.o
+#19 36.62 [ 94%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/application-packet-probe.cc.o
+#19 36.62 [ 94%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/seq-ts-echo-header.cc.o
+#19 36.62 [ 94%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/onoff-application.cc.o
+#19 36.62 [ 95%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/packet-sink.cc.o
+#19 36.75 [ 95%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/seq-ts-header.cc.o
+#19 37.10 [ 96%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/seq-ts-size-header.cc.o
+#19 37.14 [ 96%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/three-gpp-http-client.cc.o
+#19 37.16 [ 96%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/three-gpp-http-header.cc.o
+#19 37.20 [ 96%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/three-gpp-http-server.cc.o
+#19 37.24 [ 97%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/three-gpp-http-variables.cc.o
+#19 37.28 [ 97%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/udp-client.cc.o
+#19 37.30 [ 97%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/udp-echo-client.cc.o
+#19 37.31 [ 97%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/udp-echo-server.cc.o
+#19 37.45 [ 98%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/udp-server.cc.o
+#19 37.47 [ 98%] Building CXX object src/applications/CMakeFiles/libapplications-obj.dir/model/udp-trace-client.cc.o
+#19 39.43 [ 98%] Linking CXX shared library ../../lib/libns3.41-flow-monitor.so
+#19 41.67 [ 98%] Linking CXX shared library ../../lib/libns3.41-applications.so
+#19 41.82 [ 98%] Building CXX object scratch/CMakeFiles/scratch_scratch-simulator.dir/scratch-simulator.cc.o
+#19 41.82 [100%] Building CXX object scratch/CMakeFiles/scratch_subdir_scratch-subdir.dir/subdir/scratch-subdir.cc.o
+#19 41.82 [100%] Building CXX object scratch/pqg6/CMakeFiles/scratch_pqg6_pqg6-sim.dir/pqg6-sim.cc.o
+#19 41.82 [100%] Building CXX object scratch/CMakeFiles/scratch_subdir_scratch-subdir.dir/subdir/scratch-subdir-additional-header.cc.o
+#19 41.82 [100%] Building CXX object utils/CMakeFiles/print-introspected-doxygen.dir/print-introspected-doxygen.cc.o
+#19 42.38 [100%] Linking CXX executable ns3.41-scratch-simulator
+#19 42.47 [100%] Linking CXX executable subdir/ns3.41-scratch-subdir
+#19 43.92 [100%] Linking CXX executable ns3.41-print-introspected-doxygen
+#19 44.57 [100%] Linking CXX executable ns3.41-pqg6-sim
+#19 DONE 44.7s
+
+#20 [stage-2 5/9] COPY --from=ns3-builder /opt/ns3/build /opt/ns3/build
+#20 DONE 0.3s
+
+#21 [stage-2 6/9] COPY --from=ns3-builder /opt/ns3/scratch /opt/ns3/scratch
+#21 DONE 0.0s
+
+#22 [stage-2 7/9] RUN pip3 install --no-cache-dir     confluent-kafka==2.3.0     requests==2.31.0
+#22 3.523 Collecting confluent-kafka==2.3.0
+#22 4.551   Downloading confluent_kafka-2.3.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.0 MB)
+#22 38.76      ΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöü 4.0/4.0 MB 58.8 kB/s eta 0:00:00
+#22 38.92 Collecting requests==2.31.0
+#22 38.99   Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+#22 40.03      ΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöü 62.6/62.6 KB 67.6 kB/s eta 0:00:00
+#22 40.40 Collecting urllib3<3,>=1.21.1
+#22 40.49   Downloading urllib3-2.6.3-py3-none-any.whl (131 kB)
+#22 42.33      ΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöü 131.6/131.6 KB 70.6 kB/s eta 0:00:00
+#22 42.42 Collecting idna<4,>=2.5
+#22 42.46   Downloading idna-3.11-py3-none-any.whl (71 kB)
+#22 43.45      ΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöü 71.0/71.0 KB 88.1 kB/s eta 0:00:00
+#22 43.56 Collecting certifi>=2017.4.17
+#22 43.60   Downloading certifi-2026.1.4-py3-none-any.whl (152 kB)
+#22 44.57      ΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöü 152.9/152.9 KB 161.5 kB/s eta 0:00:00
+#22 45.33 Collecting charset-normalizer<4,>=2
+#22 45.39   Downloading charset_normalizer-3.4.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (153 kB)
+#22 47.01      ΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöü 153.6/153.6 KB 93.8 kB/s eta 0:00:00
+#22 47.04 Installing collected packages: confluent-kafka, urllib3, idna, charset-normalizer, certifi, requests
+#22 47.30 Successfully installed certifi-2026.1.4 charset-normalizer-3.4.4 confluent-kafka-2.3.0 idna-3.11 requests-2.31.0 urllib3-2.6.3
+#22 47.30 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#22 DONE 47.4s
+
+#23 [stage-2 8/9] COPY scripts/ /opt/pqg6/scripts/
+#23 DONE 0.0s
+
+#24 [stage-2 9/9] WORKDIR /opt/pqg6
+#24 DONE 0.0s
+
+#25 exporting to image
+#25 exporting layers
+#25 exporting layers 11.7s done
+#25 exporting manifest sha256:e0b0115e1982e4147b239500385b054d564f0c369d05b53df498ef385d73a82e 0.0s done
+#25 exporting config sha256:a7f437071502c7dcfe6fe6588973d20f3a373060fd488bc89a1910ac8c20db4b done
+#25 exporting attestation manifest sha256:1cb63acfa513700f024f9a2657724980951cf39c844e27e539e56e542dc1fd78 0.0s done
+#25 exporting manifest list sha256:97c7954e51e3ee6832fcf22621dc668b7c0c855147e94c2d66d9c5c24917d838 done
+#25 naming to docker.io/library/pqg6-ns3-simulator:latest done
+#25 unpacking to docker.io/library/pqg6-ns3-simulator:latest
+#25 unpacking to docker.io/library/pqg6-ns3-simulator:latest 2.9s done
+#25 DONE 14.7s

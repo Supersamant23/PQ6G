@@ -1,0 +1,17 @@
+FROM hadoop-base:3.3.6
+
+# Copy configuration files
+COPY config/core-site.xml ${HADOOP_CONF_DIR}/core-site.xml
+COPY config/hdfs-site.xml ${HADOOP_CONF_DIR}/hdfs-site.xml
+
+# Copy entrypoint script
+COPY scripts/datanode-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Expose DataNode ports
+# 9864: DataNode Web UI
+# 9866: DataNode data transfer
+# 9867: DataNode IPC
+EXPOSE 9864 9866 9867
+
+ENTRYPOINT ["/entrypoint.sh"]

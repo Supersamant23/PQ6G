@@ -1,0 +1,40 @@
+# Build artifacts
+*.class
+*.jar
+*.log
+target/
+project/target/
+.bsp/
+.metals/
+.scala-build/
+
+# IDE
+.vscode/
+.idea/
+
+# Docker build logs
+*-build-log.txt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# LaTeX build artifacts
+*.aux
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Data files (too large for git)
+*.csv
+*.pdf
+
+# Node
+node_modules/
+
+# Env (keep .env.example instead)
+# .env  ← we'll track .env since it has no secrets
+
+# Temp
+%OUTDIR%/

@@ -1,0 +1,17 @@
+FROM hadoop-base:3.3.6
+
+# Copy configuration files
+COPY config/core-site.xml ${HADOOP_CONF_DIR}/core-site.xml
+COPY config/hdfs-site.xml ${HADOOP_CONF_DIR}/hdfs-site.xml
+
+# Copy entrypoint script
+COPY scripts/namenode-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Expose NameNode ports
+# 9870: NameNode Web UI
+# 9000: NameNode IPC
+# 8020: NameNode IPC (alternative)
+EXPOSE 9870 9000 8020
+
+ENTRYPOINT ["/entrypoint.sh"]
