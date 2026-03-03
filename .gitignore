@@ -19,12 +19,13 @@ project/target/
 .DS_Store
 Thumbs.db
 
-# LaTeX build artifacts
+# LaTeX
 *.aux
 *.out
 *.synctex.gz
 *.fls
 *.fdb_latexmk
+*.tex
 
 # Data files (too large for git)
 *.csv
