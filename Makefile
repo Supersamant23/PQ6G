@@ -68,10 +68,37 @@ simulate:
 	docker compose run --rm ns3-simulator
 
 train-ml:
-	docker compose exec spark-client spark-submit \
+	docker exec spark-master /opt/spark/bin/spark-submit \
 		--master spark://spark-master:7077 \
 		--class TrainModel \
-		/opt/spark/apps/pqg6-spark-analytics.jar
+		--conf spark.hadoop.fs.defaultFS=hdfs://namenode:9000 \
+		--driver-memory 1g --executor-memory 1g \
+		/opt/spark/pqg6.jar
+
+train-ml-bigdata:
+	docker exec spark-master /opt/spark/bin/spark-submit \
+		--master spark://spark-master:7077 \
+		--class TrainModel \
+		--conf spark.hadoop.fs.defaultFS=hdfs://namenode:9000 \
+		--driver-memory 2g --executor-memory 4g \
+		--conf spark.sql.shuffle.partitions=200 \
+		/opt/spark/pqg6.jar hdfs://namenode:9000/pqg6/training/pq6g-20gb-dataset.csv
+
+upload-dataset:
+	@echo "Uploading 29 GB dataset to HDFS (this may take a while)..."
+	docker exec namenode hdfs dfs -mkdir -p /pqg6/training
+	docker cp data/ns3-output/pq6g-20gb-dataset.csv namenode:/tmp/dataset.csv
+	docker exec namenode hdfs dfs -put -f /tmp/dataset.csv /pqg6/training/pq6g-20gb-dataset.csv
+	docker exec namenode rm /tmp/dataset.csv
+	@echo "Upload complete."
+
+classify:
+	docker exec -d spark-master /opt/spark/bin/spark-submit \
+		--master local[2] \
+		--class ClassifyFlows \
+		--conf spark.hadoop.fs.defaultFS=hdfs://namenode:9000 \
+		/opt/spark/pqg6.jar
+	@echo "ClassifyFlows running in background."
 
 logs:
 	docker compose logs -f
@@ -102,3 +129,9 @@ swarm-deploy:
 
 swarm-rm:
 	docker stack rm pqg6
+
+swarm-status:
+	@echo "=== Nodes ===" && docker node ls
+	@echo "=== Services ===" && docker stack services pqg6
+	@echo "=== Tasks ===" && docker stack ps pqg6
+

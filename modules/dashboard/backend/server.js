@@ -89,18 +89,30 @@ app.get('/api/stats', (req, res) => {
 // Spark ML results from HDFS
 app.get('/api/spark-results', async (req, res) => {
   try {
-    const metricsUrl = `${WEBHDFS_URL}/webhdfs/v1/pqg6/metrics/evaluation.json?op=OPEN`;
-    const importanceUrl = `${WEBHDFS_URL}/webhdfs/v1/pqg6/metrics/feature-importance.json?op=OPEN`;
+    // Helper: read a Spark output directory (contains part-00000 file)
+    async function readSparkFile(hdfsDir) {
+      // List the directory to find the part-* file
+      const listUrl = `${WEBHDFS_URL}/webhdfs/v1${hdfsDir}?op=LISTSTATUS`;
+      const listResp = await fetch(listUrl);
+      const listData = await listResp.json();
+      const files = listData.FileStatuses?.FileStatus || [];
+      const partFile = files.find(f => f.pathSuffix.startsWith('part-'));
+      if (!partFile) return null;
+      // Read the part file content
+      const readUrl = `${WEBHDFS_URL}/webhdfs/v1${hdfsDir}/${partFile.pathSuffix}?op=OPEN`;
+      const readResp = await fetch(readUrl);
+      return await readResp.text();
+    }
 
-    const [metricsResp, importResp] = await Promise.allSettled([
-      fetch(metricsUrl).then(r => r.text()),
-      fetch(importanceUrl).then(r => r.text())
+    const [metricsText, importText] = await Promise.all([
+      readSparkFile('/pqg6/metrics/evaluation.json').catch(() => null),
+      readSparkFile('/pqg6/metrics/feature-importance.txt').catch(() => null)
     ]);
 
     res.json({
-      metrics: metricsResp.status === 'fulfilled' ? JSON.parse(metricsResp.value) : null,
-      featureImportance: importResp.status === 'fulfilled'
-        ? importResp.value.trim().split('\n').map(l => JSON.parse(l))
+      metrics: metricsText ? JSON.parse(metricsText.trim()) : null,
+      featureImportance: importText
+        ? importText.trim().split('\n').filter(l => l.trim()).map(l => JSON.parse(l))
         : []
     });
   } catch (err) {

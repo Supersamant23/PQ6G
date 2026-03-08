@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Group 17 — Post-Quantum 6G Intrusion Detection System</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <!-- SIDEBAR -->
+    <nav id="sidebar">
+      <div class="chapter-item active" data-slide="0">
+        01 &middot; Team &amp; Title
+      </div>
+      <div class="chapter-item" data-slide="1">02 &middot; Problem</div>
+      <div class="chapter-item" data-slide="2">03 &middot; Objectives</div>
+      <div class="chapter-item" data-slide="3">04 &middot; Architecture</div>
+      <div class="chapter-item" data-slide="4">05 &middot; PQC Protocol</div>
+      <div class="chapter-item" data-slide="5">06 &middot; Flink Pipeline</div>
+      <div class="chapter-item" data-slide="6">07 &middot; Spark ML</div>
+      <div class="chapter-item" data-slide="7">08 &middot; Data Strategy</div>
+      <div class="chapter-item" data-slide="8">09 &middot; Tech Stack</div>
+      <div class="chapter-item" data-slide="9">10 &middot; NS-3 Simulation</div>
+      <div class="chapter-item" data-slide="10">11 &middot; Dashboard</div>
+      <div class="chapter-item" data-slide="11">12 &middot; Literature</div>
+      <div class="chapter-item" data-slide="12">13 &middot; Roadmap</div>
+      <div class="chapter-item" data-slide="13">14 &middot; Q &amp; A</div>
+    </nav>
+
+    <!-- SLIDE COUNTER -->
+    <div class="slide-counter" id="slide-counter">01 / 14</div>
+    <div class="key-hint">↑ ↓ &nbsp;or&nbsp; ← → &nbsp;to navigate</div>
+
+    <!-- SLIDES CONTAINER -->
+    <div id="main-container">
+      <div id="slides-wrapper">
+        <!-- ======================== SLIDE 1: TITLE ======================== -->
+        <section class="slide active">
+          <p class="subtitle animate-in">
+            Computer Security &mdash; Final Project &middot; Group 17
+          </p>
+          <h1 class="animate-in delay-1">
+            Post-Quantum 6G<br /><span class="accent-cyan"
+              >Intrusion Detection System</span
+            >
+          </h1>
+
+          <div class="focal-separator accent-cyan animate-in delay-2"></div>
+
+          <p class="animate-in delay-2" style="margin-bottom: 2rem">
+            A hybrid security layer combining NIST-standardized post-quantum
+            cryptography with real-time AI-driven network threat detection for
+            next-generation 6G infrastructure.
+          </p>
+
+          <div class="team-grid animate-in delay-3">
+            <div class="member-card">
+              <div class="member-name">Ansh Raj Rath</div>
+              <div class="member-id">CB.SC.U4AIE23006</div>
+            </div>
+            <div class="member-card">
+              <div class="member-name">Abiruth S.</div>
+              <div class="member-id">CB.SC.U4AIE23002</div>
+            </div>
+            <div class="member-card">
+              <div class="member-name">Aditya Krishna Samant</div>
+              <div class="member-id">CB.SC.U4AIE23012</div>
+            </div>
+            <div class="member-card">
+              <div class="member-name">Dinesh Karthikeyan</div>
+              <div class="member-id">CB.SC.U4AIE23023</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SLIDE 2: PROBLEM ======================== -->
+        <section class="slide">
+          <h2 class="animate-in">
+            <span class="accent-red">Problem</span> Identification
+          </h2>
+          <div class="focal-separator accent-red animate-in delay-1"></div>
+
+          <div class="content-grid">
+            <div class="animate-in delay-2">
+              <h3>The Quantum Threat</h3>
+              <p>
+                Current encryption standards — RSA-2048, ECC, DH — rely on the
+                computational hardness of integer factorization and discrete
+                logarithms. Quantum computers running
+                <strong>Shor's Algorithm</strong> will break these in polynomial
+                time.
+              </p>
+
+              <div
+                class="card"
+                style="
+                  border-left: 3px solid var(--accent-red);
+                  margin-top: 1.5rem;
+                "
+              >
+                <h4 style="color: var(--accent-red); margin-bottom: 0.4rem">
+                  "Harvest Now, Decrypt Later"
+                </h4>
+                <p style="font-size: 0.92rem; margin-bottom: 0">
+                  Nation-state adversaries are already exfiltrating encrypted 6G
+                  traffic today, stockpiling it for decryption once
+                  cryptographically relevant quantum computers arrive (estimated
+                  2030–2035).
+                </p>
+              </div>
+            </div>
+
+            <div class="animate-in delay-3">
+              <div
+                class="stat-box"
+                style="border-color: var(--accent-red); margin-bottom: 1rem"
+              >
+                <span class="stat-val accent-red">2030</span>
+                <span class="stat-label"
+                  >Projected Quantum Cryptanalytic Breakthrough</span
+                >
+              </div>
+              <div
+                class="stat-box"
+                style="border-color: var(--accent-red); margin-bottom: 1rem"
+              >
+                <span class="stat-val accent-red">0%</span>
+                <span class="stat-label"
+                  >RSA/ECC Security vs Quantum Computers</span
+                >
+              </div>
+              <div class="stat-box" style="border-color: var(--accent-red)">
+                <span class="stat-val accent-red">6G</span>
+                <span class="stat-label"
+                  >Expected Commercial Deployment 2030</span
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SLIDE 3: OBJECTIVES ======================== -->
+        <section class="slide">
+          <h2 class="animate-in">
+            <span class="accent-lime">Project</span> Objectives
+          </h2>
+          <div class="focal-separator accent-lime animate-in delay-1"></div>
+
+          <div class="content-grid">
+            <div class="animate-in delay-2">
+              <h3>Primary Goal</h3>
+              <p>
+                Implement a <strong>Hybrid Security Layer</strong> for 6G
+                networks that unifies post-quantum cryptography (PQC) with
+                real-time, stream-based intrusion detection.
+              </p>
+
+              <ul class="ul-styled" style="margin-top: 1.5rem">
+                <li>
+                  <strong>Kyber-768 (FIPS 203):</strong> Quantum-resistant Key
+                  Encapsulation Mechanism based on Module-LWE.
+                </li>
+                <li>
+                  <strong>Dilithium-3 (FIPS 204):</strong> Quantum-resistant
+                  Digital Signatures based on M-LWE / M-SIS.
+                </li>
+                <li>
+                  <strong>AES-256-GCM:</strong> Symmetric-key data encryption
+                  post-handshake for throughput performance.
+                </li>
+                <li>
+                  <strong>Real-time IDS:</strong> Apache Flink streaming
+                  analytics to detect FLOOD, STEALTH, and BURST attacks in
+                  10-second tumbling windows.
+                </li>
+              </ul>
+            </div>
+
+            <div class="animate-in delay-3">
+              <div class="card" style="border: 1px solid var(--accent-lime)">
+                <h3 style="color: var(--accent-lime)">
+                  Security Outcomes (CIA Triad)
+                </h3>
+                <div
+                  style="
+                    display: flex;
+                    gap: 0.8rem;
+                    flex-direction: column;
+                    margin-top: 0.8rem;
+                  "
+                >
+                  <div
+                    style="
+                      padding: 0.9rem 1rem;
+                      background: rgba(184, 255, 0, 0.06);
+                      border-radius: 8px;
+                    "
+                  >
+                    <strong>Confidentiality:</strong> Kyber-768 KEM protects
+                    session keys against quantum-capable adversaries.
+                  </div>
+                  <div
+                    style="
+                      padding: 0.9rem 1rem;
+                      background: rgba(184, 255, 0, 0.06);
+                      border-radius: 8px;
+                    "
+                  >
+                    <strong>Integrity:</strong> Dilithium-3 signed handshakes
+                    prevent MITM and forgery.
+                  </div>
+                  <div
+                    style="
+                      padding: 0.9rem 1rem;
+                      background: rgba(184, 255, 0, 0.06);
+                      border-radius: 8px;
+                    "
+                  >
+                    <strong>Availability:</strong> Real-time DDoS detection
+                    (Flink) + ML classification (Spark) maintain service uptime.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SLIDE 4: ARCHITECTURE ======================== -->
+        <section class="slide">
+          <h2 class="animate-in">
+            <span class="accent-purple">System</span> Architecture
+          </h2>
+          <p class="subtitle animate-in delay-1">
+            End-to-End Data Flow — Dockerized Microservices
+          </p>
+          <div class="focal-separator accent-purple animate-in delay-1"></div>
+
+          <div class="content-full animate-in delay-2">
+            <div class="arch-diagram">
+              <div class="arch-row">
+                <div class="arch-box" style="border-color: var(--accent-cyan)">
+                  6G Devices<br /><span
+                    style="font-size: 0.7rem; color: #7a7a8e"
+                    >Clients</span
+                  >
+                </div>
+                <div class="arch-box" style="border-color: var(--accent-cyan)">
+                  Base Stations<br /><span
+                    style="font-size: 0.7rem; color: #7a7a8e"
+                    >Servers</span
+                  >
+                </div>
+              </div>
+              <div class="arrow-down">↓</div>
+              <div
+                class="arch-box"
+                style="border-color: var(--accent-magenta); width: 75%"
+              >
+                <strong style="color: var(--accent-magenta)"
+                  >SECURITY LAYER</strong
+                ><br />
+                <span style="font-size: 0.82rem"
+                  >Kyber-768 (KEM) + Dilithium-3 (Signatures) +
+                  AES-256-GCM</span
+                >
+              </div>
+              <div class="arrow-down">↓</div>
+              <div
+                class="arch-box"
+                style="border-color: var(--accent-purple); width: 75%"
+              >
+                <strong style="color: var(--accent-purple)"
+                  >NS-3 SIMULATOR</strong
+                ><br />
+                <span style="font-size: 0.82rem"
+                  >Star topology · 10 Gbps p2p · liboqs integration · Flow
+                  metrics (CSV + JSON)</span
+                >
+              </div>
+              <div class="arrow-down">↓</div>
+              <div class="arch-row">
+                <div class="arch-box">
+                  Kafka (KRaft)<br /><span
+                    style="font-size: 0.7rem; color: #7a7a8e"
+                    >Event Streaming</span
+                  >
+                </div>
+                <div class="arch-box">
+                  Flink 1.18<br /><span
+                    style="font-size: 0.7rem; color: #7a7a8e"
+                    >Real-time IDS</span
+                  >
+                </div>
+                <div class="arch-box">
+                  Spark 3.5<br /><span style="font-size: 0.7rem; color: #7a7a8e"
+                    >ML Training</span
+                  >
+                </div>
+                <div class="arch-box">
+                  HDFS 3.3.6<br /><span
+                    style="font-size: 0.7rem; color: #7a7a8e"
+                    >Storage</span
+                  >
+                </div>
+              </div>
+              <div class="arrow-down">↓</div>
+              <div class="arch-box" style="border-color: var(--accent-teal)">
+                <strong style="color: var(--accent-teal)">Dashboard</strong
+                ><br />
+                <span style="font-size: 0.82rem"
+                  >Node.js + WebSocket · Live Alerts · Health Monitoring</span
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SLIDE 5: PQC HANDSHAKE ======================== -->
+        <section class="slide">
+          <h2 class="animate-in">
+            <span class="accent-magenta">PQC Handshake</span> Protocol
+          </h2>
+          <div class="focal-separator accent-magenta animate-in delay-1"></div>
+
+          <div class="content-grid">
+            <div class="animate-in delay-2">
+              <h3>NIST Standardized Algorithms</h3>
+              <p>
+                Each network flow performs a real Kyber key exchange and
+                Dilithium signature via <strong>liboqs 0.10.1</strong> compiled
+                into the NS-3 simulator.
+              </p>
+
+              <div
+                class="card"
+                style="
+                  margin-top: 1.5rem;
+                  font-family: var(--mono);
+                  font-size: 0.78rem;
+                  line-height: 1.9;
+                  color: var(--fg-dim);
+                "
+              >
+                <strong style="color: var(--fg)">Client</strong> →
+                <em>ClientHello</em><br />
+                <strong style="color: var(--fg)">Server</strong> →
+                <em>ServerHello</em> (Kyber PubKey + Dilithium Sig)<br />
+                <span
+                  class="accent-magenta"
+                  style="display: block; margin: 0.3rem 0"
+                  >// Client verifies signature &amp; encapsulates</span
+                >
+                <strong style="color: var(--fg)">Client</strong> →
+                <em>KeyExchange</em> (Kyber Ciphertext)<br />
+                <span
+                  class="accent-magenta"
+                  style="display: block; margin: 0.3rem 0"
+                  >// Both derive shared secret</span
+                >
+                <strong style="color: var(--fg)">Both</strong> → Switch to
+                <em>AES-256-GCM</em>
+              </div>
+            </div>
+
+            <div class="animate-in delay-3">
+              <h3>Why Lattice-Based Crypto?</h3>
+              <ul class="ul-styled">
+                <li>
+                  <strong>Kyber (M-LWE):</strong> Public key ~1,184 B,
+                  ciphertext ~1,088 B — compact enough for 6G mobile devices.
+                </li>
+                <li>
+                  <strong>Dilithium (M-LWE/SIS):</strong> Strong EUF-CMA
+                  authentication, sigs ~3,293 B — prevents MITM during
+                  handshake.
+                </li>
+                <li>
+                  <strong>AES-GCM:</strong> Post-handshake symmetric encryption.
+                  Fast. Proven. No quantum weakness for 256-bit keys.
+                </li>
+              </ul>
+
+              <table class="data-table" style="margin-top: 1.2rem">
+                <tr>
+                  <th>Metric</th>
+                  <th>Kyber-768</th>
+                  <th>RSA-2048</th>
+                </tr>
+                <tr>
+                  <td>Key Size</td>
+                  <td style="color: var(--accent-magenta)">1,184 B</td>
+                  <td>256 B</td>
+                </tr>
+                <tr>
+                  <td>Quantum-Safe</td>
+                  <td style="color: var(--accent-magenta)">✓ Yes</td>
+                  <td>✗ No</td>
+                </tr>
+                <tr>
+                  <td>Based On</td>
+                  <td>Module-LWE</td>
+                  <td>Factoring</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SLIDE 6: FLINK PIPELINE ======================== -->
+        <section class="slide">
+          <h2 class="animate-in">
+            <span class="accent-blue">Flink</span> Real-Time Pipeline
+          </h2>
+          <div class="focal-separator accent-blue animate-in delay-1"></div>
+
+          <div class="content-grid">
+            <div class="animate-in delay-2">
+              <h3>Attack Detection Engine</h3>
+              <p>
+                Apache Flink 1.18 consumes flow events from Kafka, applies
+                rule-based heuristic classification, and emits alerts +
+                aggregated statistics in
+                <strong>10-second tumbling windows</strong>.
+              </p>
+
+              <div
+                class="code-block"
+                style="margin-top: 1rem; font-size: 0.75rem"
+              >
+                def detectAttackType: String = { if (flow_bytes_s > 2M ||
+                flow_packets_s > 4K) "FLOOD" else if (flow_bytes_s > 500K &&
+                iat_std > iat_mean*0.3) "BURST" else if (flow_bytes_s < 5K &&
+                pkt_len_mean < 100) "STEALTH" else "Normal" }
+              </div>
+
+              <ul class="ul-styled" style="margin-top: 1rem">
+                <li>
+                  <strong>Severity Levels:</strong> CRITICAL · HIGH · MEDIUM ·
+                  LOW — based on bytes/sec and packets/sec thresholds.
+                </li>
+                <li>
+                  <strong>Dual Sink:</strong> Alerts → Kafka
+                  (<code>security-alerts</code>) + HDFS file sink for long-term
+                  retention.
+                </li>
+              </ul>
+            </div>
+
+            <div class="animate-in delay-3">
+              <h3>Kafka Topics</h3>
+              <div class="card" style="margin-bottom: 1rem">
+                <table class="data-table" style="margin: 0">
+                  <tr>
+                    <th>Topic</th>
+                    <th>Partitions</th>
+                    <th>Role</th>
+                  </tr>
+                  <tr>
+                    <td style="color: var(--accent-blue)">network-flows</td>
+                    <td>3</td>
+                    <td>Ingestion</td>
+                  </tr>
+                  <tr>
+                    <td style="color: var(--accent-blue)">security-alerts</td>
+                    <td>1</td>
+                    <td>Attack Alerts</td>
+                  </tr>
+                  <tr>
+                    <td style="color: var(--accent-blue)">flow-statistics</td>
+                    <td>1</td>
+                    <td>Window Stats</td>
+                  </tr>
+                </table>
+              </div>
+
+              <h3>PQC-Aware Metrics</h3>
+              <p style="font-size: 0.9rem">
+                Each windowed statistic includes average KEM handshake time and
+                signature signing time — enabling monitoring of cryptographic
+                overhead alongside attack detection.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SLIDE 7: SPARK ML ======================== -->
+        <section class="slide">
+          <h2 class="animate-in">
+            <span class="accent-amber">Spark MLlib</span> Classification
+          </h2>
+          <div class="focal-separator accent-amber animate-in delay-1"></div>
+
+          <div class="content-grid">
+            <div class="animate-in delay-2">
+              <h3>Random Forest Classifier</h3>
+              <p>
+                Spark 3.5.1 trains a multiclass Random Forest (Normal / FLOOD /
+                STEALTH / BURST) on labeled ground-truth generated by the NS-3
+                simulator.
+              </p>
+
+              <ul class="ul-styled" style="margin-top: 1rem">
+                <li>
+                  <strong>Trees:</strong> 100 &nbsp;|&nbsp;
+                  <strong>Max Depth:</strong> 10 &nbsp;|&nbsp;
+                  <strong>Seed:</strong> 42
+                </li>
+                <li><strong>Split:</strong> 80% train · 20% test</li>
+                <li>
+                  <strong>15 Features:</strong> Flow bytes/s, packets/s, IAT
+                  (mean, std, max, min), pkt length stats, duration, fwd
+                  packets, KEM time, SIG sign/verify time.
+                </li>
+                <li>
+                  <strong>Pipeline:</strong> StringIndexer → VectorAssembler →
+                  RF → IndexToString
+                </li>
+              </ul>
+            </div>
+
+            <div class="animate-in delay-3">
+              <h3>Structured Streaming Classifier</h3>
+              <p style="font-size: 0.9rem">
+                After training, the model is loaded in Spark Structured
+                Streaming mode to classify <em>new</em> flows from Kafka in
+                real-time. Predictions are written to HDFS.
+              </p>
+
+              <div
+                class="card"
+                style="border: 1px solid var(--accent-amber); margin-top: 1rem"
+              >
+                <h4 style="color: var(--accent-amber)">
+                  Dual Detection Strategy
+                </h4>
+                <div
+                  style="
+                    display: flex;
+                    gap: 0.8rem;
+                    flex-direction: column;
+                    margin-top: 0.6rem;
+                    font-size: 0.88rem;
+                    color: var(--fg-dim);
+                  "
+                >
+                  <div
+                    style="
+                      padding: 0.7rem;
+                      background: rgba(251, 191, 36, 0.06);
+                      border-radius: 6px;
+                    "
+                  >
+                    <strong>Layer 1 — Flink (Rule-Based):</strong> Threshold
+                    heuristics for immediate low-latency alerts.
+                  </div>
+                  <div
+                    style="
+                      padding: 0.7rem;
+                      background: rgba(251, 191, 36, 0.06);
+                      border-radius: 6px;
+                    "
+                  >
+                    <strong>Layer 2 — Spark (ML-Based):</strong> Random Forest
+                    for nuanced multiclass classification with feature
+                    importance.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SLIDE 8: DATA STRATEGY ======================== -->
+        <section class="slide">
+          <h2 class="animate-in">
+            <span class="accent-teal">Data</span> Strategy
+          </h2>
+          <div class="focal-separator accent-teal animate-in delay-1"></div>
+
+          <div class="content-grid">
+            <div class="animate-in delay-2">
+              <h3>Dataset Composition</h3>
+              <p>
+                Simulator-generated labeled dataset with balanced mix of benign
+                and adversarial traffic patterns.
+              </p>
+
+              <div class="card" style="margin-top: 1rem">
+                <table class="data-table" style="margin: 0">
+                  <tr>
+                    <th>Traffic Type</th>
+                    <th>Count</th>
+                    <th>Share</th>
+                  </tr>
+                  <tr>
+                    <td>Normal</td>
+                    <td>11,009</td>
+                    <td>68.13%</td>
+                  </tr>
+                  <tr>
+                    <td style="color: var(--accent-red)">Flood</td>
+                    <td>1,989</td>
+                    <td>12.31%</td>
+                  </tr>
+                  <tr>
+                    <td style="color: var(--accent-amber)">Stealth</td>
+                    <td>1,632</td>
+                    <td>10.10%</td>
+                  </tr>
+                  <tr>
+                    <td style="color: var(--accent-orange)">Burst</td>
+                    <td>1,530</td>
+                    <td>9.47%</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Total</strong></td>
+                    <td><strong>16,160</strong></td>
+                    <td><strong>100%</strong></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <div class="animate-in delay-3">
+              <h3>Data Acquisition Pipeline</h3>
+              <ul class="ul-styled">
+                <li>
+                  <strong>Generation:</strong> NS-3 simulation → labeled
+                  ground-truth CSV (26 columns per flow) + individual JSON files
+                  per flow.
+                </li>
+                <li>
+                  <strong>Ingestion:</strong> <code>export-flows.py</code> reads
+                  JSON → publishes each flow to Kafka
+                  (<code>network-flows</code>) with delivery confirmation.
+                </li>
+                <li>
+                  <strong>Storage:</strong> Ground-truth CSV uploaded to HDFS
+                  via WebHDFS REST API for Spark ML training.
+                </li>
+                <li>
+                  <strong>Retention:</strong> Kafka retains 168 hours. Flink
+                  writes alerts + stats to HDFS with 15-minute rolling policy.
+                </li>
+              </ul>
+
+              <div class="stats-row" style="margin-top: 1rem">
+                <div class="stat-box" style="border-color: var(--accent-teal)">
+                  <span class="stat-val accent-teal">26</span>
+                  <span class="stat-label">Features per Flow</span>
+                </div>
+                <div class="stat-box" style="border-color: var(--accent-teal)">
+                  <span class="stat-val accent-teal">2</span>
+                  <span class="stat-label">Output Formats</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SLIDE 9: TECH STACK ======================== -->
+        <section class="slide">
+          <h2 class="animate-in">
+            <span class="accent-cyan">Technical</span> Stack
+          </h2>
+          <div class="focal-separator accent-cyan animate-in delay-1"></div>
+
+          <div class="content-grid">
+            <div class="animate-in delay-2">
+              <h3>Core Technologies</h3>
+              <div class="pill-row" style="margin-top: 0.5rem">
+                <span
+                  class="pill"
+                  style="
+                    border-color: var(--accent-cyan);
+                    color: var(--accent-cyan);
+                  "
+                  >C++ / NS-3.41</span
+                >
+                <span
+                  class="pill"
+                  style="
+                    border-color: var(--accent-cyan);
+                    color: var(--accent-cyan);
+                  "
+                  >Scala 2.12</span
+                >
+                <span
+                  class="pill"
+                  style="
+                    border-color: var(--accent-cyan);
+                    color: var(--accent-cyan);
+                  "
+                  >Python 3</span
+                >
+                <span
+                  class="pill"
+                  style="
+                    border-color: var(--accent-cyan);
+                    color: var(--accent-cyan);
+                  "
+                  >Node.js</span
+                >
+                <span
+                  class="pill"
+                  style="
+                    border-color: var(--accent-cyan);
+                    color: var(--accent-cyan);
+                  "
+                  >liboqs 0.10.1</span
+                >
+              </div>
+
+              <h3 style="margin-top: 1.5rem">Data & Streaming</h3>
+              <div class="pill-row">
+                <span class="pill">Apache Kafka (KRaft)</span>
+                <span class="pill">Apache Flink 1.18</span>
+                <span class="pill">Apache Spark 3.5.1</span>
+                <span class="pill">HDFS 3.3.6</span>
+                <span class="pill">WebSocket</span>
+              </div>
+
+              <h3 style="margin-top: 1.5rem">Infrastructure</h3>
+              <div class="pill-row">
+                <span class="pill">Docker Compose (Profiles)</span>
+                <span class="pill">Docker Swarm (Prod)</span>
+                <span class="pill">Make</span>
+              </div>
+            </div>
+
+            <div class="animate-in delay-3">
+              <div
+                class="card"
+                style="background: rgba(0, 229, 255, 0.04); margin-bottom: 1rem"
+              >
+                <h4>Deployment Profiles</h4>
+                <ul class="ul-styled" style="font-size: 0.88rem">
+                  <li>
+                    <strong>Full:</strong> All services (~10–11 GB) — Kafka,
+                    Flink, HDFS, Spark, NS-3, Dashboard.
+                  </li>
+                  <li>
+                    <strong>Dev:</strong> Kafka + Flink + Dashboard (~3 GB) —
+                    for real-time streaming development.
+                  </li>
+                  <li>
+                    <strong>ML:</strong> Kafka + Spark + HDFS (~7 GB) — for
+                    model training workflows.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="card" style="background: rgba(0, 229, 255, 0.04)">
+                <h4>Why Scala?</h4>
+                <p style="font-size: 0.88rem">
+                  Functional paradigm suits the mathematical nature of
+                  cryptographic operations and native API compatibility with
+                  both Flink and Spark streaming frameworks.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SLIDE 10: NS-3 SIMULATION ======================== -->
+        <section class="slide">
+          <h2 class="animate-in">
+            <span class="accent-orange">NS-3</span> Network Simulation
+          </h2>
+          <div class="focal-separator accent-orange animate-in delay-1"></div>
+
+          <div class="content-grid">
+            <div class="animate-in delay-2">
+              <h3>Simulation Design</h3>
+              <p>
+                NS-3.41 simulates a star topology with a central router,
+                modeling 6G point-to-point links at
+                <strong>10 Gbps</strong> with <strong>0.1 ms</strong> latency.
+                Each flow executes a real PQC handshake via liboqs.
+              </p>
+
+              <ul class="ul-styled" style="margin-top: 1rem">
+                <li>
+                  <strong>Topology:</strong> Star — sources → router →
+                  destinations (1 pair per flow).
+                </li>
+                <li>
+                  <strong>Default Config:</strong> 20 Normal + 3 Flood + 3
+                  Stealth + 2 Burst flows, 30s duration.
+                </li>
+                <li>
+                  <strong>Attack Models:</strong> OnOff applications with
+                  calibrated rates (50 Mbps flood, 100 Kbps stealth, 100 Mbps
+                  burst).
+                </li>
+                <li>
+                  <strong>FlowMonitor:</strong> Captures per-flow stats — bytes,
+                  packets, IAT, delay, packet lengths.
+                </li>
+              </ul>
+            </div>
+
+            <div class="animate-in delay-3">
+              <h3>Per-Flow PQC Execution</h3>
+              <p style="font-size: 0.9rem">
+                Not simulated — <em>actually executed</em>. Each flow calls
+                <code>OQS_KEM_keypair</code>, <code>OQS_KEM_encaps</code>,
+                <code>OQS_KEM_decaps</code>, and <code>OQS_SIG_sign</code> /
+                <code>OQS_SIG_verify</code>, then logs the overhead in
+                milliseconds.
+              </p>
+
+              <div
+                class="code-block"
+                style="margin-top: 1rem; font-size: 0.73rem"
+              >
+                // C++ — pqg6-sim.cc OQS_KEM *kem =
+                OQS_KEM_new(OQS_KEM_alg_kyber_768); OQS_KEM_keypair(kem,
+                public_key, secret_key); OQS_KEM_encaps(kem, ciphertext,
+                shared_secret_enc, public_key); OQS_KEM_decaps(kem,
+                shared_secret_dec, ciphertext, secret_key); // Verify shared
+                secrets match bool ok = memcmp(shared_secret_enc,
+                shared_secret_dec, len) == 0;
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SLIDE 11: DASHBOARD ======================== -->
+        <section class="slide">
+          <h2 class="animate-in">
+            <span class="accent-purple">Live</span> Dashboard
+          </h2>
+          <div class="focal-separator accent-purple animate-in delay-1"></div>
+
+          <div class="content-grid">
+            <div class="animate-in delay-2">
+              <h3>Real-Time Monitoring</h3>
+              <p>
+                A Node.js + Express backend subscribes to Kafka topics via
+                KafkaJS and broadcasts events over WebSocket to the browser UI
+                in real-time.
+              </p>
+
+              <ul class="ul-styled" style="margin-top: 1rem">
+                <li>
+                  <strong>WebSocket Push:</strong> Every Kafka message (flows,
+                  alerts, stats) is broadcast to all connected clients
+                  instantly.
+                </li>
+                <li>
+                  <strong>REST API:</strong> <code>/api/alerts</code> ·
+                  <code>/api/stats</code> · <code>/api/health</code> ·
+                  <code>/api/spark-results</code>
+                </li>
+                <li>
+                  <strong>Service Health:</strong> Polls Kafka, HDFS, Flink
+                  JobManager, and reports container status.
+                </li>
+                <li>
+                  <strong>Simulation Trigger:</strong>
+                  <code>POST /api/simulate</code> launches NS-3 with custom
+                  parameters via Docker Engine API (socket-level).
+                </li>
+              </ul>
+            </div>
+
+            <div class="animate-in delay-3">
+              <h3>Key Capabilities</h3>
+              <div style="display: flex; flex-direction: column; gap: 0.8rem">
+                <div class="card">
+                  <h4 style="color: var(--accent-purple)">Live Alert Feed</h4>
+                  <p style="font-size: 0.85rem; margin-bottom: 0">
+                    Caches last 200 alerts in-memory. New clients receive 50
+                    most recent on connection.
+                  </p>
+                </div>
+                <div class="card">
+                  <h4 style="color: var(--accent-purple)">Spark ML Results</h4>
+                  <p style="font-size: 0.85rem; margin-bottom: 0">
+                    Reads evaluation metrics + feature importance from HDFS via
+                    WebHDFS REST API.
+                  </p>
+                </div>
+                <div class="card">
+                  <h4 style="color: var(--accent-purple)">
+                    Docker Integration
+                  </h4>
+                  <p style="font-size: 0.85rem; margin-bottom: 0">
+                    Triggers NS-3 simulation container with overridden env vars
+                    — adjustable flow counts, duration, PQC toggle.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SLIDE 12: LITERATURE ======================== -->
+        <section class="slide">
+          <h2 class="animate-in">
+            <span class="accent-teal">Literature</span> Study
+          </h2>
+          <div class="focal-separator accent-teal animate-in delay-1"></div>
+
+          <div class="content-full animate-in delay-2">
+            <div
+              class="card"
+              style="
+                margin-bottom: 1.5rem;
+                border: 1px solid var(--accent-teal);
+              "
+            >
+              <h3 style="color: var(--accent-teal); margin-bottom: 0.4rem">
+                NIST PQC Standardization (2024–2026)
+              </h3>
+              <p style="font-size: 0.92rem">
+                Our implementation strictly adheres to FIPS 203 (ML-KEM / Kyber)
+                and FIPS 204 (ML-DSA / Dilithium), the first quantum-resistant
+                cryptographic standards published by NIST.
+              </p>
+            </div>
+
+            <div class="content-grid">
+              <div>
+                <h4>Reference Papers</h4>
+                <ul class="ul-styled" style="font-size: 0.9rem">
+                  <li>
+                    "CRYSTALS-Kyber: Algorithm Specifications and Supporting
+                    Documentation" — NIST
+                  </li>
+                  <li>
+                    "CRYSTALS-Dilithium: Digital Signatures from Module
+                    Lattices" — Ducas et al.
+                  </li>
+                  <li>
+                    "Scalable Traffic Analysis in 6G Networks using Big Data
+                    Frameworks" — IEEE
+                  </li>
+                  <li>
+                    "Intrusion Detection Systems using Machine Learning: A
+                    Survey" — ACM Computing Surveys
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4>Comparative Analysis</h4>
+                <table class="data-table">
+                  <tr>
+                    <th>Scheme</th>
+                    <th>Type</th>
+                    <th>Key Size</th>
+                    <th>Practical?</th>
+                  </tr>
+                  <tr>
+                    <td style="color: var(--accent-teal)">Kyber</td>
+                    <td>Lattice</td>
+                    <td>~1 KB</td>
+                    <td>✓ Yes</td>
+                  </tr>
+                  <tr>
+                    <td>McEliece</td>
+                    <td>Code</td>
+                    <td>~255 KB</td>
+                    <td>✗ Too large</td>
+                  </tr>
+                  <tr>
+                    <td>SIKE</td>
+                    <td>Isogeny</td>
+                    <td>~0.2 KB</td>
+                    <td>✗ Broken</td>
+                  </tr>
+                  <tr>
+                    <td>NTRU</td>
+                    <td>Lattice</td>
+                    <td>~1 KB</td>
+                    <td>~ Alt</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SLIDE 13: ROADMAP ======================== -->
+        <section class="slide">
+          <h2 class="animate-in">
+            <span class="accent-lime">Project</span> Roadmap
+          </h2>
+          <div class="focal-separator accent-lime animate-in delay-1"></div>
+
+          <div class="content-grid">
+            <div class="animate-in delay-2">
+              <div class="progress-item">
+                <div class="progress-label">
+                  <span>Phase 1 · Foundation</span>
+                  <span class="accent-lime">Complete</span>
+                </div>
+                <p style="font-size: 0.82rem; margin-bottom: 0.5rem">
+                  Docker Compose setup, Kafka KRaft cluster, HDFS
+                  namenode/datanode, Makefile automation.
+                </p>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    style="width: 100%; background: var(--accent-lime)"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="progress-item">
+                <div class="progress-label">
+                  <span>Phase 2 · Cryptography</span>
+                  <span class="accent-lime">Complete</span>
+                </div>
+                <p style="font-size: 0.82rem; margin-bottom: 0.5rem">
+                  liboqs integration (Kyber-768 + Dilithium-3), NS-3 simulator
+                  with PQC handshake per flow.
+                </p>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    style="width: 100%; background: var(--accent-lime)"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="progress-item">
+                <div class="progress-label">
+                  <span>Phase 3 · Intelligence</span>
+                  <span class="accent-lime">Complete</span>
+                </div>
+                <p style="font-size: 0.82rem; margin-bottom: 0.5rem">
+                  Flink attack detection jobs (rule-based), Spark Random Forest
+                  training (100 trees), structured streaming classifier.
+                </p>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    style="width: 100%; background: var(--accent-lime)"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="progress-item">
+                <div class="progress-label">
+                  <span>Phase 4 · Integration</span>
+                  <span class="accent-lime">Complete</span>
+                </div>
+                <p style="font-size: 0.82rem; margin-bottom: 0.5rem">
+                  NS-3 → Kafka export pipeline, Dashboard with WebSocket +
+                  Docker API, full-profile deployment.
+                </p>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    style="width: 100%; background: var(--accent-lime)"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="animate-in delay-3">
+              <div
+                class="stat-box"
+                style="border-color: var(--accent-lime); margin-bottom: 1rem"
+              >
+                <span class="stat-val accent-lime">4 / 4</span>
+                <span class="stat-label">Phases Complete</span>
+              </div>
+
+              <div class="card" style="border: 1px solid var(--accent-lime)">
+                <h4 style="color: var(--accent-lime)">Deliverables</h4>
+                <ul class="ul-styled" style="font-size: 0.88rem">
+                  <li>
+                    <strong>5 Docker modules</strong> — ns3-simulator,
+                    flink-processor, spark-analytics, hdfs-storage, dashboard.
+                  </li>
+                  <li>
+                    <strong>3 deployment profiles</strong> — full, dev, ml via
+                    Docker Compose.
+                  </li>
+                  <li>
+                    <strong>Production-ready</strong> — Swarm deployment yaml
+                    included.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================== SLIDE 14: Q&A ======================== -->
+        <section class="slide">
+          <div class="center-content animate-in" style="height: 100%">
+            <p class="subtitle" style="margin-bottom: 1.5rem">
+              Group 17 &middot; Computer Security Final Project
+            </p>
+
+            <h2 style="margin-bottom: 0.5rem">Thank You</h2>
+
+            <div
+              class="focal-separator accent-cyan"
+              style="width: 80px; margin: 1rem auto"
+            ></div>
+
+            <h1 class="accent-cyan" style="margin-bottom: 2rem">Q &amp; A</h1>
+
+            <p
+              style="max-width: 600px; text-align: center; margin-bottom: 3rem"
+            >
+              A Post-Quantum 6G Intrusion Detection System combining Kyber-768,
+              Dilithium-3, Apache Flink, and Spark MLlib for quantum-resilient
+              network security.
+            </p>
+
+            <div class="team-grid" style="max-width: 700px">
+              <div class="member-card">
+                <div class="member-name">Ansh</div>
+                <div class="member-id">23006</div>
+              </div>
+              <div class="member-card">
+                <div class="member-name">Abiruth</div>
+                <div class="member-id">23002</div>
+              </div>
+              <div class="member-card">
+                <div class="member-name">Aditya</div>
+                <div class="member-id">23012</div>
+              </div>
+              <div class="member-card">
+                <div class="member-name">Dinesh</div>
+                <div class="member-id">23023</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

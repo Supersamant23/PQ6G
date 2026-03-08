@@ -131,6 +131,14 @@
     const sev = alert.severity || 'LOW';
     if (severityFilter.current !== 'all' && sev !== severityFilter.current) return;
 
+    // Normalize field names (support both Flink camelCase and Spark snake_case)
+    const attackType = alert.attackType || alert.attack_type || 'Unknown';
+    const srcIp = alert.srcIp || alert.src_ip || '?';
+    const dstIp = alert.dstIp || alert.dst_ip || '?';
+    const bytesPerSec = alert.flowBytesPerSec || alert.flowBytesS || alert.bytes_per_sec || 0;
+    const pqcEnabled = alert.pqcEnabled != null ? alert.pqcEnabled : alert.pqc_enabled;
+    const ts = alert.timestamp || alert.classified_at || Date.now();
+
     const feed = document.getElementById('alert-feed');
     if (feed.querySelector('.empty-state')) feed.innerHTML = '';
 
@@ -139,10 +147,10 @@
     item.innerHTML = `
       <span class="alert-severity ${sev}">${sev}</span>
       <div class="alert-body">
-        <div class="alert-type">${alert.attackType || 'Unknown'} Attack</div>
-        <div class="alert-detail">${alert.srcIp || '?'} → ${alert.dstIp || '?'} | ${formatNum(alert.flowBytesPerSec)} B/s | PQC: ${alert.pqcEnabled ? 'ON' : 'OFF'}</div>
+        <div class="alert-type">${attackType} Attack${alert.source === 'spark-ml' ? ' <span style="color:#8b5cf6;font-size:0.7rem">[ML]</span>' : ''}</div>
+        <div class="alert-detail">${srcIp} → ${dstIp} | ${formatNum(bytesPerSec)} B/s | PQC: ${pqcEnabled ? 'ON' : 'OFF'}</div>
       </div>
-      <span class="alert-time">${new Date(alert.timestamp || Date.now()).toLocaleTimeString()}</span>
+      <span class="alert-time">${new Date(ts).toLocaleTimeString()}</span>
     `;
     feed.prepend(item);
 

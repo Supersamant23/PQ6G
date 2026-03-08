@@ -7,8 +7,8 @@ import org.apache.spark.ml.PipelineModel
  * PQG6 — Spark Structured Streaming Flow Classifier
  *
  * Loads the trained Random Forest model from HDFS, reads new flows
- * from Kafka in real-time, classifies them, and writes predictions
- * to HDFS for the dashboard to consume.
+ * from Kafka in real-time, classifies them, and publishes predictions
+ * to the `security-alerts` Kafka topic for the dashboard to display.
  */
 object ClassifyFlows {
 
@@ -22,19 +22,19 @@ object ClassifyFlows {
     val hdfsBase = sys.env.getOrElse("HDFS_NAMENODE", "hdfs://namenode:9000")
     val kafkaServers = sys.env.getOrElse("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
     val modelPath = s"$hdfsBase/pqg6/models/rf-model"
-    val outputPath = s"$hdfsBase/pqg6/predictions"
 
     println("=" * 80)
     println("  PQG6 — SPARK STREAMING FLOW CLASSIFIER")
-    println("  Real-time ML-based Attack Detection")
+    println("  Real-time ML-based Attack Detection → Kafka Alerts")
     println("=" * 80)
-    println(s"Model:  $modelPath")
-    println(s"Kafka:  $kafkaServers")
-    println(s"Output: $outputPath")
+    println(s"Model:        $modelPath")
+    println(s"Kafka:        $kafkaServers")
+    println(s"Alert topic:  security-alerts")
 
     // ---- Load trained model ----
     println("Loading trained model...")
     val model = PipelineModel.load(modelPath)
+    println("Model loaded successfully.")
 
     // ---- Define the schema for NS-3 JSON flows ----
     val flowSchema = new StructType()
@@ -94,27 +94,45 @@ object ClassifyFlows {
       .withColumnRenamed("kem_handshake_ms", "KEM_Handshake_ms")
       .withColumnRenamed("sig_sign_ms", "SIG_Sign_ms")
       .withColumnRenamed("sig_verify_ms", "SIG_Verify_ms")
+      .na.fill(0.0)
 
-    // ---- Apply model ----
+    // ---- Apply model and build alert JSON ----
     val predictions = model.transform(flowStream)
+      .withColumn("severity", when($"predicted_attack" === "FLOOD", "CRITICAL")
+        .when($"predicted_attack" === "BURST", "HIGH")
+        .when($"predicted_attack" === "STEALTH", "MEDIUM")
+        .otherwise("LOW"))
       .select(
-        $"flow_id", $"src_ip", $"dst_ip",
-        $"Flow_Bytes_s", $"Flow_Packets_s",
-        $"predicted_attack", $"prediction",
-        current_timestamp().as("classified_at")
+        to_json(struct(
+          $"flow_id".as("flowId"),
+          $"src_ip".as("srcIp"),
+          $"dst_ip".as("dstIp"),
+          $"Flow_Bytes_s".as("flowBytesPerSec"),
+          $"Flow_Packets_s".as("flowPacketsPerSec"),
+          $"predicted_attack".as("attackType"),
+          $"severity",
+          $"pqc_enabled".as("pqcEnabled"),
+          $"KEM_Handshake_ms".as("kemHandshakeMs"),
+          $"SIG_Sign_ms".as("sigSignMs"),
+          current_timestamp().as("timestamp"),
+          lit("spark-ml").as("source")
+        )).as("value")
       )
 
-    // ---- Write predictions to HDFS as JSON ----
+    // ---- Write predictions to Kafka security-alerts topic ----
     val query = predictions.writeStream
-      .format("json")
-      .option("path", outputPath)
+      .format("kafka")
+      .option("kafka.bootstrap.servers", kafkaServers)
+      .option("topic", "security-alerts")
       .option("checkpointLocation", s"$hdfsBase/pqg6/checkpoints/classify")
       .outputMode("append")
       .start()
 
-    println("Streaming classifier running... Press Ctrl-C to stop.")
+    println("Streaming classifier running — publishing alerts to Kafka `security-alerts`...")
+    println("Dashboard will show alerts in real-time via WebSocket.")
     query.awaitTermination()
 
     spark.stop()
   }
 }
+

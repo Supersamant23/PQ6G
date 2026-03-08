@@ -30,6 +30,7 @@ Thumbs.db
 # Data files (too large for git)
 *.csv
 *.pdf
+data/
 
 # Node
 node_modules/

@@ -153,6 +153,51 @@ std::string AttackTypeToString(AttackType t) {
     }
 }
 
+// ---- Per-Packet Logging ----
+
+struct PacketLogContext {
+    uint32_t flowId;
+    std::string srcIp;
+    std::string dstIp;
+    uint16_t port;
+    std::string attackType;
+    bool pqcEnabled;
+    double kemMs;
+    double signMs;
+    double verifyMs;
+};
+
+std::ofstream g_packetLog;
+std::vector<PacketLogContext> g_contexts;
+
+void OnTxPacket(PacketLogContext *ctx, Ptr<const Packet> packet)
+{
+    g_packetLog << std::fixed << std::setprecision(6)
+                << Simulator::Now().GetSeconds() << ","
+                << ctx->flowId << ","
+                << ctx->srcIp << "," << ctx->dstIp << ","
+                << ctx->port << ","
+                << packet->GetSize() << ",tx,"
+                << ctx->attackType << ","
+                << (ctx->pqcEnabled ? 1 : 0) << ","
+                << ctx->kemMs << "," << ctx->signMs << "," << ctx->verifyMs
+                << "\n";
+}
+
+void OnRxPacket(PacketLogContext *ctx, Ptr<const Packet> packet, const Address &)
+{
+    g_packetLog << std::fixed << std::setprecision(6)
+                << Simulator::Now().GetSeconds() << ","
+                << ctx->flowId << ","
+                << ctx->srcIp << "," << ctx->dstIp << ","
+                << ctx->port << ","
+                << packet->GetSize() << ",rx,"
+                << ctx->attackType << ","
+                << (ctx->pqcEnabled ? 1 : 0) << ","
+                << ctx->kemMs << "," << ctx->signMs << "," << ctx->verifyMs
+                << "\n";
+}
+
 /**
  * Install application traffic on a flow with given attack profile.
  */
@@ -242,6 +287,7 @@ int main(int argc, char *argv[])
     uint32_t numBurstFlows = 2;
     bool enablePQC = true;
     std::string outputDir = "/opt/pqg6/output";
+    std::string packetLogPath = "";
 
     CommandLine cmd;
     cmd.AddValue("duration", "Simulation duration (s)", simDuration);
@@ -251,6 +297,7 @@ int main(int argc, char *argv[])
     cmd.AddValue("burstFlows", "Number of BURST attack flows", numBurstFlows);
     cmd.AddValue("pqc", "Enable post-quantum crypto", enablePQC);
     cmd.AddValue("outputDir", "Output directory", outputDir);
+    cmd.AddValue("packetLog", "Per-packet CSV output path (empty=disabled)", packetLogPath);
     cmd.Parse(argc, argv);
 
     uint32_t totalFlows = numNormalFlows + numFloodFlows + numStealthFlows + numBurstFlows;
@@ -307,7 +354,7 @@ int main(int argc, char *argv[])
         srcSubnet << "10.1." << (i * 2 + 1) << ".0";
         address.SetBase(Ipv4Address(srcSubnet.str().c_str()), "255.255.255.0");
         NetDeviceContainer srcLink = p2p.Install(sources.Get(i), router.Get(0));
-        address.Assign(srcLink);
+        Ipv4InterfaceContainer srcIface = address.Assign(srcLink);
 
         // Router -> Destination link
         std::ostringstream dstSubnet;
@@ -335,6 +382,55 @@ int main(int argc, char *argv[])
 
     // Enable global routing
     Ipv4GlobalRoutingHelper::PopulateRoutingTables();
+
+    // ---- Per-packet logging (if enabled) ----
+    bool packetLogEnabled = !packetLogPath.empty();
+    if (packetLogEnabled) {
+        if (packetLogPath == "auto") {
+            packetLogPath = outputDir + "/packets.csv";
+        }
+        g_packetLog.open(packetLogPath);
+        g_packetLog << "timestamp_s,flow_id,src_ip,dst_ip,port,packet_size_bytes,"
+                    << "direction,attack_type,pqc_enabled,kem_handshake_ms,"
+                    << "sig_sign_ms,sig_verify_ms" << std::endl;
+
+        // Build per-flow contexts
+        g_contexts.resize(totalFlows);
+        for (uint32_t i = 0; i < totalFlows; i++) {
+            auto &ci = cryptoInfo[i];
+            std::ostringstream srcAddr, dstAddr;
+            srcAddr << "10.1." << (i * 2 + 1) << ".1";
+            dstAddr << "10.1." << (i * 2 + 2) << ".2";
+
+            g_contexts[i] = {
+                i,
+                srcAddr.str(),
+                dstAddr.str(),
+                static_cast<uint16_t>(basePort + i),
+                AttackTypeToString(ci.attackType),
+                enablePQC,
+                ci.kex.handshake_time_ms,
+                ci.sign.sign_time_ms,
+                ci.sign.verify_time_ms
+            };
+
+            // Connect to OnOffApplication Tx trace on source node
+            uint32_t srcNodeId = sources.Get(i)->GetId();
+            std::string txPath = "/NodeList/" + std::to_string(srcNodeId)
+                + "/ApplicationList/0/$ns3::OnOffApplication/Tx";
+            Config::ConnectWithoutContext(txPath,
+                MakeBoundCallback(&OnTxPacket, &g_contexts[i]));
+
+            // Connect to PacketSink Rx trace on destination node
+            uint32_t dstNodeId = destinations.Get(i)->GetId();
+            std::string rxPath = "/NodeList/" + std::to_string(dstNodeId)
+                + "/ApplicationList/0/$ns3::PacketSink/Rx";
+            Config::ConnectWithoutContext(rxPath,
+                MakeBoundCallback(&OnRxPacket, &g_contexts[i]));
+        }
+
+        NS_LOG_INFO("Per-packet logging enabled: " << packetLogPath);
+    }
 
     // ---- Install FlowMonitor ----
     FlowMonitorHelper flowMonHelper;
@@ -460,6 +556,11 @@ int main(int argc, char *argv[])
     NS_LOG_INFO("Simulation complete. Generated " << flowIndex << " flow records.");
     NS_LOG_INFO("CSV output: " << csvPath);
     NS_LOG_INFO("JSON output: " << jsonDir);
+
+    if (packetLogEnabled) {
+        g_packetLog.close();
+        NS_LOG_INFO("Per-packet log: " << packetLogPath);
+    }
 
     Simulator::Destroy();
     return 0;

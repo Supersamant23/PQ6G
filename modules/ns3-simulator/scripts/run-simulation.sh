@@ -15,6 +15,7 @@ FLOOD_FLOWS="${SIM_FLOOD_FLOWS:-3}"
 STEALTH_FLOWS="${SIM_STEALTH_FLOWS:-3}"
 BURST_FLOWS="${SIM_BURST_FLOWS:-2}"
 PQC_ENABLED="${SIM_PQC_ENABLED:-true}"
+PACKET_LOG="${SIM_PACKET_LOG:-false}"
 
 echo "============================================"
 echo "PQG6 Simulation Starting"
@@ -24,7 +25,14 @@ echo "  FLOOD flows:   ${FLOOD_FLOWS}"
 echo "  STEALTH flows: ${STEALTH_FLOWS}"
 echo "  BURST flows:   ${BURST_FLOWS}"
 echo "  PQC enabled:   ${PQC_ENABLED}"
+echo "  Packet log:    ${PACKET_LOG}"
 echo "============================================"
+
+# Build packet log argument
+PACKET_LOG_ARG=""
+if [ "$PACKET_LOG" = "true" ]; then
+    PACKET_LOG_ARG="--packetLog=auto"
+fi
 
 # Run NS-3 simulation
 echo "[1/2] Running NS-3 simulation..."
@@ -35,7 +43,8 @@ echo "[1/2] Running NS-3 simulation..."
     --stealthFlows="$STEALTH_FLOWS" \
     --burstFlows="$BURST_FLOWS" \
     --pqc="$PQC_ENABLED" \
-    --outputDir="$OUTPUT_DIR"
+    --outputDir="$OUTPUT_DIR" \
+    $PACKET_LOG_ARG
 
 echo "[1/2] Simulation complete."
 
