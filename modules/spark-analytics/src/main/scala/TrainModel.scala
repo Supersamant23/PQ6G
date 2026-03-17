@@ -207,6 +207,10 @@ object TrainModel {
     println(s"Metrics saved to $metricsPath")
     println("Training complete!")
 
+    println("\n>>> Spark job finished. The UI is still available at http://localhost:4040")
+    println(">>> Press [ENTER] to stop the Spark context and exit...")
+    scala.io.StdIn.readLine()
+
     spark.stop()
   }
 }

@@ -42,6 +42,7 @@ echo "[1/2] Running NS-3 simulation..."
     --floodFlows="$FLOOD_FLOWS" \
     --stealthFlows="$STEALTH_FLOWS" \
     --burstFlows="$BURST_FLOWS" \
+    --multiplier="${SIM_FLOW_MULTIPLIER:-1}" \
     --pqc="$PQC_ENABLED" \
     --outputDir="$OUTPUT_DIR" \
     $PACKET_LOG_ARG

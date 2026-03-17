@@ -200,6 +200,7 @@ services:
     ports:
       - "8080:8080" # Spark Master UI
       - "7077:7077" # Spark Master RPC
+      - "4040:4040" # Spark Application UI
     networks:
       - pqg6-net
     profiles: ["full", "ml"]
@@ -210,7 +211,7 @@ services:
     hostname: spark-worker-1
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     environment:
-      - SPARK_WORKER_MEMORY=2g
+      - SPARK_WORKER_MEMORY=3g
       - SPARK_WORKER_CORES=2
     depends_on:
       - spark-master
@@ -224,7 +225,7 @@ services:
     hostname: spark-worker-2
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     environment:
-      - SPARK_WORKER_MEMORY=2g
+      - SPARK_WORKER_MEMORY=3g
       - SPARK_WORKER_CORES=2
     depends_on:
       - spark-master

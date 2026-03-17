@@ -285,6 +285,7 @@ int main(int argc, char *argv[])
     uint32_t numFloodFlows = 3;
     uint32_t numStealthFlows = 3;
     uint32_t numBurstFlows = 2;
+    uint32_t flowMultiplier = 2;
     bool enablePQC = true;
     std::string outputDir = "/opt/pqg6/output";
     std::string packetLogPath = "";
@@ -295,10 +296,16 @@ int main(int argc, char *argv[])
     cmd.AddValue("floodFlows", "Number of FLOOD attack flows", numFloodFlows);
     cmd.AddValue("stealthFlows", "Number of STEALTH attack flows", numStealthFlows);
     cmd.AddValue("burstFlows", "Number of BURST attack flows", numBurstFlows);
+    cmd.AddValue("multiplier", "Global flow count multiplier", flowMultiplier);
     cmd.AddValue("pqc", "Enable post-quantum crypto", enablePQC);
     cmd.AddValue("outputDir", "Output directory", outputDir);
     cmd.AddValue("packetLog", "Per-packet CSV output path (empty=disabled)", packetLogPath);
     cmd.Parse(argc, argv);
+    
+    numNormalFlows *= flowMultiplier;
+    numFloodFlows *= flowMultiplier;
+    numStealthFlows *= flowMultiplier;
+    numBurstFlows *= flowMultiplier;
 
     uint32_t totalFlows = numNormalFlows + numFloodFlows + numStealthFlows + numBurstFlows;
 

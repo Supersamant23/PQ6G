@@ -43,6 +43,12 @@ build-flink:
 build-spark:
 	@echo "Building Spark analytics..."
 	docker build -t pqg6-spark-analytics:latest modules/spark-analytics/
+	@echo "Extracting and replacing JAR in Spark Master..."
+	-docker create --name temp-spark-client pqg6-spark-analytics:latest
+	-docker cp temp-spark-client:/opt/spark/apps/pqg6-spark-analytics.jar ./pqg6.jar
+	-docker rm temp-spark-client
+	-docker cp ./pqg6.jar spark-master:/opt/spark/pqg6.jar
+	-rm ./pqg6.jar
 
 build-dashboard:
 	@echo "Building Dashboard..."
@@ -68,7 +74,7 @@ simulate:
 	docker compose run --rm ns3-simulator
 
 train-ml:
-	docker exec spark-master /opt/spark/bin/spark-submit \
+	docker exec -it spark-master /opt/spark/bin/spark-submit \
 		--master spark://spark-master:7077 \
 		--class TrainModel \
 		--conf spark.hadoop.fs.defaultFS=hdfs://namenode:9000 \
@@ -76,19 +82,82 @@ train-ml:
 		/opt/spark/pqg6.jar
 
 train-ml-bigdata:
-	docker exec spark-master /opt/spark/bin/spark-submit \
+	docker exec -it spark-master /opt/spark/bin/spark-submit \
 		--master spark://spark-master:7077 \
 		--class TrainModel \
 		--conf spark.hadoop.fs.defaultFS=hdfs://namenode:9000 \
-		--driver-memory 2g --executor-memory 4g \
-		--conf spark.sql.shuffle.partitions=200 \
-		/opt/spark/pqg6.jar hdfs://namenode:9000/pqg6/training/pq6g-20gb-dataset.csv
+		--driver-memory 1g \
+		--executor-memory 2g \
+		--conf spark.memory.fraction=0.5 \
+		--conf spark.sql.shuffle.partitions=400 \
+		/opt/spark/pqg6.jar hdfs://namenode:9000/pqg6/training/pq6g-1gb-dataset.csv
+
+train-ml-7.5gb:
+	docker exec -it spark-master /opt/spark/bin/spark-submit \
+		--master spark://spark-master:7077 \
+		--class TrainModel \
+		--conf spark.hadoop.fs.defaultFS=hdfs://namenode:9000 \
+		--driver-memory 1g \
+		--executor-memory 2g \
+		--conf spark.memory.fraction=0.5 \
+		--conf spark.sql.shuffle.partitions=400 \
+		/opt/spark/pqg6.jar hdfs://namenode:9000/pqg6/training/pq6g-7.5gb-dataset.csv
+
+train-ml-3.3gb:
+	docker exec -it spark-master /opt/spark/bin/spark-submit \
+		--master spark://spark-master:7077 \
+		--class TrainModel \
+		--conf spark.hadoop.fs.defaultFS=hdfs://namenode:9000 \
+		--driver-memory 1g \
+		--executor-memory 2g \
+		--conf spark.memory.fraction=0.5 \
+		--conf spark.sql.shuffle.partitions=400 \
+		/opt/spark/pqg6.jar hdfs://namenode:9000/pqg6/training/pq6g-3.3gb-dataset.csv
+
+train-ml-1.5gb:
+	docker exec -it spark-master /opt/spark/bin/spark-submit \
+		--master spark://spark-master:7077 \
+		--class TrainModel \
+		--conf spark.hadoop.fs.defaultFS=hdfs://namenode:9000 \
+		--driver-memory 1g \
+		--executor-memory 2g \
+		--conf spark.memory.fraction=0.5 \
+		--conf spark.sql.shuffle.partitions=400 \
+		/opt/spark/pqg6.jar hdfs://namenode:9000/pqg6/training/pq6g-1.5gb-dataset.csv
 
 upload-dataset:
 	@echo "Uploading 29 GB dataset to HDFS (this may take a while)..."
 	docker exec namenode hdfs dfs -mkdir -p /pqg6/training
 	docker cp data/ns3-output/pq6g-20gb-dataset.csv namenode:/tmp/dataset.csv
 	docker exec namenode hdfs dfs -put -f /tmp/dataset.csv /pqg6/training/pq6g-20gb-dataset.csv
+	docker exec namenode rm /tmp/dataset.csv
+	@echo "Upload complete."
+
+upload-dataset-1gb:
+	@echo "Uploading 1 GB dataset to HDFS (this may take a while)..."
+	docker cp data/ns3-output/dataset.csv namenode:/tmp/dataset.csv
+	docker exec namenode hdfs dfs -put -f /tmp/dataset.csv /pqg6/training/pq6g-1gb-dataset.csv
+	docker exec namenode rm /tmp/dataset.csv
+	@echo "Upload complete."
+
+upload-dataset-7.5gb:
+	@echo "Uploading 7.5 GB dataset to HDFS (this may take a while)..."
+	docker cp data/ns3-output/pq6g-7.5gb-dataset.csv namenode:/tmp/dataset.csv
+	docker exec namenode hdfs dfs -put -f /tmp/dataset.csv /pqg6/training/pq6g-7.5gb-dataset.csv
+	docker exec namenode rm /tmp/dataset.csv
+	@echo "Upload complete."
+
+upload-dataset-3.3gb:
+	@echo "Uploading 3.3 GB dataset to HDFS (this may take a while)..."
+	docker cp data/ns3-output/pq6g-3.3gb-dataset.csv namenode:/tmp/dataset.csv
+	docker exec namenode hdfs dfs -put -f /tmp/dataset.csv /pqg6/training/pq6g-3.3gb-dataset.csv
+	docker exec namenode rm /tmp/dataset.csv
+	@echo "Upload complete."
+
+upload-dataset-1.5gb:
+	@echo "Uploading 1.5 GB dataset to HDFS (this may take a while)..."
+	docker cp data/ns3-output/pq6g-1.5gb-dataset.csv namenode:/tmp/dataset.csv
+	docker exec namenode hdfs dfs -put -f /tmp/dataset.csv /pqg6/training/pq6g-1.5gb-dataset.csv
 	docker exec namenode rm /tmp/dataset.csv
 	@echo "Upload complete."
 
