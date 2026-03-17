@@ -2,7 +2,7 @@
 
 > A hybrid security layer combining NIST-standardized post-quantum cryptography (PQC) with real-time, stream-based intrusion detection for next-generation 6G infrastructure.
 
-**Group 17 · Computer Security Final Project**  
+**Group 17 · Final Project**  
 Ansh Raj Rath · Abiruth S. · Aditya Krishna Samant · Dinesh Karthikeyan
 
 ---
